@@ -15,9 +15,19 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <sys/time.h>
 #include <pthread.h>
 #include <stdlib.h>
 #include <unistd.h>
+
+typedef struct m_test
+{	
+	int 			id;
+	pthread_mutex_t *mutex;
+	pthread_mutex_t *check;
+	int 			*lock;
+
+} t_test;
 
 typedef struct m_contr
 {	
@@ -26,6 +36,8 @@ typedef struct m_contr
 	unsigned int 	time_to_eat;
 	unsigned int 	time_to_sleep;
 	int 			must_eat;
+	pthread_mutex_t mutex;
+	int lock;
 
 	int 			*forks;
 
