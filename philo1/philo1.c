@@ -12,12 +12,6 @@
 
 #include "philo1.h"
 
-typedef struct m_philo
-{
-	int last_meal;
-}	t_philo;
-
-
 int init(int argc, char **argv, t_contr *contr)
 {
 	// if (argc < 5 || argc > 6)
@@ -29,199 +23,153 @@ int init(int argc, char **argv, t_contr *contr)
 	// contr->time_to_die = (unsigned int)ft_atoi(argv[2]);
 	// contr->time_to_eat = (unsigned int)ft_atoi(argv[3]);
 	// contr->time_to_sleep = (unsigned int)ft_atoi(argv[4]);
-	contr->nbr_of_philo = 1;
-	contr->time_to_die = 10000;
-	contr->time_to_eat = 1000;
-	contr->time_to_sleep = 5000;
+	contr->nbr_of_philo = 2;
+	contr->time_to_die = 500000; //5 sec
+	contr->time_to_eat = 1000000; //1 sec
+	contr->time_to_sleep = 3000000; //3sec
 	contr->must_eat = -1;
 	if (argc == 6)
 		contr->must_eat = ft_atoi(argv[5]);
 	contr->print_lock = 0;
 
-	contr->forks = malloc(sizeof(int) * contr->nbr_of_philo);
+	// contr->forks = malloc(sizeof(int) * contr->nbr_of_philo);
 
 	int i = -1;
-	while (++i < contr->nbr_of_philo)
-		contr->forks[i] = 1;
+	// while (++i < contr->nbr_of_philo)
+	// 	contr->forks[i] = 1;
 
-	pthread_mutex_init(&(contr->mutex), 0);
+	// pthread_mutex_init(&(contr->mutex), 0);
 
 
 	return (0);
 }
 
-int comp_tz(struct timeval one, struct timeval two)
+void printline(char *str, int val)
 {
-	// return (one->)
-	return 1;
+	ft_putstr(str);
+	ft_putnbr(val);
+	write(1, "\n", 1);
 }
 
-void loop(void *arg)
+void death_loop(t_philo *philo)
 {
-	t_contr *contr = (t_contr *)arg;
-	struct timeval sp;
-	struct timeval new;
-	int alive = 1;
-	int spawn = gettimeofday(&sp, NULL);
-	
-	while(alive)
-	{
-		spawn = gettimeofday(&new, NULL);
-		printf("SLEEPING \n");
-		usleep(contr->time_to_sleep);
-		usleep(contr->time_to_sleep);
 
-		if (new.tv_usec > sp.tv_usec + contr->time_to_die)
+	int alive;
+
+	
+	alive = 1;
+	struct timeval time;
+	//; //Get time of its start
+	// printline("Death spawn", philo->id);
+
+
+	unsigned long ttdie = 10;
+
+
+	while (alive)
+	{
+		gettimeofday(&time, 0);
+		// printf("delta is %ld\n",time.tv_sec - philo->ate.tv_sec );
+		if (time.tv_usec - philo->ate.tv_usec >= philo->contr->time_to_die)
 		{
-			printf("philo died\n");
-			alive = 0;
+			// if(philo->id == 0)
+			printline("it should die", philo->id);
+			philo->alive = 0;
+			return;
 		}
 		else
 		{
-			pthread_mutex_lock(&(contr->mutex));
-
-			printf("FOOD TIME\n");
-			usleep(contr->time_to_eat);
-			pthread_mutex_unlock(&(contr->mutex));
-			spawn = gettimeofday(&sp, NULL);
+			// if(philo->id == 0)
+				// printf("we fine\n");
 		}
-		
 	}
-	//eat
-	//sleep
-	//think
-	printf("philo died\n");
 }
-void testloop(void *arg)
+
+void life_loop(t_philo *philo)
 {
-	t_test *test = (t_test *) arg;
+	printline("Philo spawn", philo->id);
 
+	int run = 1;
+
+	pthread_t pid;
+	philo->alive = 1;
+
+	gettimeofday(&(philo->ate), 0);
+	pthread_create(&pid, 0, (void *)death_loop, (void *)philo); //Create death checker
 	
-	int alive = 1;
-	printf("test->id = %d\n",test->id );
 
-	int mtxrights = 0;
-	while (alive < 1000)
+
+	unsigned long ttsleep = 50;
+
+
+	while(philo->alive)
 	{
+
+		
+		pthread_mutex_lock(&(philo->contr->mutex[0]));
+		printline("has taken 1 fork", philo->id);
 		
 
-		// pthread_mutex_lock(test->check);
+		pthread_mutex_lock(&(philo->contr->mutex[1]));
+		printline("has taken 2 fork", philo->id);
 
 
+		printline("is eating", philo->id);
+		usleep(philo->contr->time_to_eat);
 
-		// if (*(test->lock) == 1)
-		// {
-		// 	// printf("Fork n%d has to wait\n",test->id);
-		// 	int mtxrights = 1;
-		// 	pthread_mutex_unlock(test->check);
-		// }
-		// else
-		// {
-			// *(test->lock) = 1;
-			pthread_mutex_lock((test->mutex));
-			pthread_mutex_lock((test->check));
-			// pthread_mutex_unlock(test->check);
+		gettimeofday(&(philo->ate), 0);
 
-
-			printf("Fork n%d got the mutex at time\n",test->id);
-			pthread_mutex_unlock((test->mutex));
-			usleep(10);
+		pthread_mutex_unlock(&(philo->contr->mutex[0]));
+		pthread_mutex_unlock(&(philo->contr->mutex[1]));
 			
-			pthread_mutex_unlock((test->check));
-			// usleep(10);
-
-			// printf("Fork n%d left the mutex\n",test->id);
-
-			// pthread_mutex_lock(test->check);
-			// *(test->lock) = 0;
-			// pthread_mutex_unlock((test->check));
-		//}
+		printline("drop 2 fork", philo->id);
 
 		
+		printline("philo gonna sleep", philo->id);
+		usleep(philo->contr->time_to_sleep);
+
+		
+		
+		// ttsleep *=2;
 	}
-
-	// struct timeval spawn;
-	// struct timeval current;
-	
-	// int alive = 1;
-	
-	// gettimeofday(&spawn, NULL);
-	
-	// pthread_mutex_lock((test->mutex));
-	// printf("Fork n%d got the mutex at time\n",test->id);
-	// usleep(5000000);
-	// pthread_mutex_unlock((test->mutex));
-	// printf("Fork n%d left the mutex\n",test->id);
+	printline("Philo rm", philo->id);
 }
 
-
-void spawn_philo(t_contr *contr, t_test *test)
+void spawn(t_contr *contr)
 {
-	
-
-	pthread_t pid[2];
-
-	int i = 0;
-	// while(i < contr->nbr_of_philo)
-
-	// {
-		
-		t_test t1;
-		t_test t2;
-
-		int lock;
-
-		lock = 0;
-
-		t1.id = 0;
-		t2.id = 1;
-
-		pthread_mutex_t mute;
-		pthread_mutex_init(&(mute), 0);
-
-		pthread_mutex_t check;
-		pthread_mutex_init(&(check), 0);
+	int i;
+	pthread_t pid[contr->nbr_of_philo];
+	t_philo philo[contr->nbr_of_philo];
 
 
-		t1.mutex = &mute;
-		t2.mutex = &mute;
 
-		t1.check = &check;
-		t2.check = &check;
 
-		t1.lock = &lock;
-		t2.lock = &lock;
+	i = 0;
 
-		pthread_create(&(pid[0]), 0, (void *)&testloop, (void *)&t1);
-		pthread_create(&(pid[1]), 0, (void *)&testloop, (void *)&t2);	
-	// 	// i++;
-	// // }
-	
-	// // i = 0;
-	// // while(i < contr->nbr_of_philo)
-	// // {
-		pthread_join(pid[0], NULL);
-		
-		pthread_join(pid[1], NULL);
-		// i++;
-		pthread_mutex_destroy(&mute);
-		pthread_mutex_destroy(&check);
-	// }
+	while( i < contr->nbr_of_philo)
+	{
+		pthread_mutex_init(&(contr->mutex[i]), 0);
+		philo[i].contr = contr;
+		philo[i].id = i;
+		pthread_create(&(pid[i]), 0, (void *)life_loop, (void *)&(philo[i]));
+		i++;
+	}
+	i = 0;
+	while( i < contr->nbr_of_philo)
+	{
+		pthread_join(pid[i], 0);
+		i++;
+	}
+	for(int j = 0; j < contr->nbr_of_philo; j++)
+		pthread_mutex_destroy(&(contr->mutex[j]));
 }
-
 
 
 int main(int argc, char **argv)
 {
 	t_contr contr;
-	t_test test;
-
-	test.id = 0;
-	// pthread_mutex_init(&(test.mutex), 0);
-
-	// if (init(argc, argv, &contr))
-	// 	return (1);
-	spawn_philo(&contr, &test);
-	// pthread_mutex_destroy((test.mutex));
-	return (0);
+	init(argc, argv, &contr);
+	/* code */
+	spawn(&contr);
+	return 0;
 }
