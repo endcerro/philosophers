@@ -25,8 +25,8 @@ int init(int argc, char **argv, t_contr *contr)
 	// contr->time_to_sleep = (unsigned int)ft_atoi(argv[4]);
 	contr->nbr_of_philo = 	2;
 	contr->time_to_die = 	5000; //5 sec
-	contr->time_to_eat = 	1000000; //1 sec
-	contr->time_to_sleep = 	2000000; //3sec
+	contr->time_to_eat = 	2000000; //1 sec
+	contr->time_to_sleep = 	5000000; //3sec
 	contr->must_eat = -1;
 	if (argc == 6)
 		contr->must_eat = ft_atoi(argv[5]);
@@ -55,34 +55,17 @@ void death_loop(t_philo *philo)
 {
 
 	int alive;
+	struct timeval t;
 
-	
+	gettimeofday(&t, 0),
+
 	alive = 1;
-	struct timeval time;
-	//; //Get time of its start
-	// printline("Death spawn", philo->id);
-
-
-	unsigned long ttdie = 10;
-
-
 	while (alive)
 	{
-		gettimeofday(&time, 0);
-		// printf("delta is %ld\n",time.tv_sec - philo->ate.tv_sec );
-		// if (time.tv_usec - philo->ate.tv_usec >= philo->contr->time_to_die)
-		if (pthread_mutex_lock(&(philo->food_mtx)) == 0 && time.tv_usec >= philo->alive_untill.tv_usec)
+		if (pthread_mutex_lock(&(philo->food_mtx)) == 0 && t.tv_usec >= philo->alive_untill.tv_usec)
 		{
-			// printf("delta is %ld\n",time.tv_sec - philo->ate.tv_sec );
-			// if(philo->id == 0)
-			// 	printf("time %li untill %li\n", time.tv_usec, philo->alive_untill.tv_usec );
 			printline("it should die", philo->id);
 			philo->alive = 0;
-		}
-		else
-		{
-			// if(philo->id == 0)
-				// printf("we fine\n");
 		}
 		pthread_mutex_unlock(&(philo->food_mtx));
 	}
@@ -93,13 +76,12 @@ void p_ts(t_contr *contr)
 	struct timeval t;
 
 	gettimeofday(&t, 0);
-	ft_putnbr_l(t.tv_usec - contr->start.tv_usec);
+	ft_putnbr_l((t.tv_usec - contr->start.tv_usec) / 1000);
 }
 
 void p_action(t_philo *p, int action)
 {
-
-	// pthread_mutex_lock(&(p->contr->stdout));
+	pthread_mutex_lock(&(p->contr->stdout));
 	p_ts(p->contr);
 	write(1," ",1);
 	ft_putnbr(p->id);
@@ -114,9 +96,39 @@ void p_action(t_philo *p, int action)
 	else if(action == 4)
 		ft_putstr(" died\n");
 
-	// pthread_mutex_unlock(&(p->contr->stdout));
+	pthread_mutex_unlock(&(p->contr->stdout));
 }
 
+
+void getforks(t_philo *philo)
+{
+	pthread_mutex_lock(&(philo->contr->mutex[0])); 						//Lock first fork
+	p_action(philo, 0);													//Announce it
+		
+
+	pthread_mutex_lock(&(philo->contr->mutex[1]));						//Lock second fork
+	p_action(philo, 0);													//Announce it
+
+}
+
+void eat(t_philo *philo)
+{
+	pthread_mutex_lock(&(philo->food_mtx));								//Locking food
+	p_action(philo, 1);													//Announce it
+	usleep(philo->contr->time_to_eat);									//Eating time
+
+	gettimeofday(&(philo->alive_untill), 0);							//Reset time
+	philo->alive_untill.tv_usec += 1000 * philo->contr->time_to_die;	//Add lifespan
+
+
+	pthread_mutex_unlock(&(philo->food_mtx));							//Release food
+}
+
+void dropforks(t_philo *philo)
+{
+	pthread_mutex_unlock(&(philo->contr->mutex[0]));					//Release fork
+	pthread_mutex_unlock(&(philo->contr->mutex[1]));					//Release fork
+}
 
 
 void life_loop(t_philo *philo)
@@ -128,32 +140,25 @@ void life_loop(t_philo *philo)
 
 	gettimeofday(&(philo->alive_untill), 0); 								//Getting spawn time
 	philo->alive_untill.tv_usec += 1000 * philo->contr->time_to_die; 		//Adding lifespan in ms
+	
+
 	pthread_mutex_init(&(philo->food_mtx), 0);
+
+
+
+
 	pthread_create(&pid, 0, (void *)death_loop, (void *)philo); 			//Create death checker
 	
 
 	while(philo->alive)
 	{
-		pthread_mutex_lock(&(philo->contr->mutex[0])); 						//Lock first fork
-		p_action(philo, 0);													//Announce it
-		
 
-		pthread_mutex_lock(&(philo->contr->mutex[1]));						//Lock second fork
-		p_action(philo, 0);													//Announce it
+		getforks(philo);
 
+		eat(philo);
 
-		pthread_mutex_lock(&(philo->food_mtx));								//Locking food
-		p_action(philo, 1);													//Announce it
-		usleep(philo->contr->time_to_eat);									//Eating time
+		dropforks(philo);
 
-		gettimeofday(&(philo->alive_untill), 0);							//Reset time
-		philo->alive_untill.tv_usec += 1000 * philo->contr->time_to_die;	//Add lifespan
-
-
-		pthread_mutex_unlock(&(philo->food_mtx));							//Release food
-		pthread_mutex_unlock(&(philo->contr->mutex[0]));					//Release fork
-		pthread_mutex_unlock(&(philo->contr->mutex[1]));					//Release fork
-			
 		p_action(philo, 2);													//Announce sleep
 		usleep(philo->contr->time_to_sleep);								//Sleep
 	}
