@@ -40,10 +40,15 @@ typedef struct m_contr
 	unsigned int 	time_to_sleep;
 	int 			must_eat;
 	pthread_mutex_t mutex[2];
+
+
+	pthread_mutex_t stdout;
+
+
 	int lock;
 
 
-	
+	struct timeval	start;
 	int 			*forks;
 
 	int 			print_lock;
@@ -63,7 +68,13 @@ typedef struct m_philo
 
 	unsigned long ttdie;
 
+	pthread_mutex_t philo_mtx;
+
 	struct timeval	ate;
+
+
+	struct timeval  alive_untill;
+
 } t_philo;
 
 
@@ -73,5 +84,6 @@ void ft_putstr(char *str);
 int ft_strlen(char *str);
 void printinit(t_contr *contr);
 void	ft_putnbr(int n);
+void	ft_putnbr_l(long int n);
 
 #endif
