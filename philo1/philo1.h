@@ -85,5 +85,5 @@ int ft_strlen(char *str);
 void printinit(t_contr *contr);
 void	ft_putnbr(int n);
 void	ft_putnbr_l(long int n);
-
+void life_loop(t_philo *philo);
 #endif

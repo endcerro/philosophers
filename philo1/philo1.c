@@ -26,7 +26,7 @@ int init(int argc, char **argv, t_contr *contr)
 	contr->nbr_of_philo = 	2;
 	contr->time_to_die = 	5000; //5 sec
 	contr->time_to_eat = 	2000000; //1 sec
-	contr->time_to_sleep = 	5000000; //3sec
+	contr->time_to_sleep = 	1000000; //3sec
 	contr->must_eat = -1;
 	if (argc == 6)
 		contr->must_eat = ft_atoi(argv[5]);
@@ -119,7 +119,11 @@ void eat(t_philo *philo)
 
 	gettimeofday(&(philo->alive_untill), 0);							//Reset time
 	philo->alive_untill.tv_usec += 1000 * philo->contr->time_to_die;	//Add lifespan
-
+	if(philo->alive_untill.tv_usec >= 1000000)
+	{
+		philo->alive_untill.tv_usec -= 1000000;
+		philo->alive_untill.tv_sec += 1;
+	}
 
 	pthread_mutex_unlock(&(philo->food_mtx));							//Release food
 }
@@ -131,39 +135,39 @@ void dropforks(t_philo *philo)
 }
 
 
-void life_loop(t_philo *philo)
-{
-	int run = 1;
-	pthread_t pid;
+// void life_loop(t_philo *philo)
+// {
+// 	int run = 1;
+// 	pthread_t pid;
 	
-	philo->alive = 1;
+// 	philo->alive = 1;
 
-	gettimeofday(&(philo->alive_untill), 0); 								//Getting spawn time
-	philo->alive_untill.tv_usec += 1000 * philo->contr->time_to_die; 		//Adding lifespan in ms
-	
-
-	pthread_mutex_init(&(philo->food_mtx), 0);
-
-
-
-
-	pthread_create(&pid, 0, (void *)death_loop, (void *)philo); 			//Create death checker
+// 	gettimeofday(&(philo->alive_untill), 0); 								//Getting spawn time
+// 	philo->alive_untill.tv_usec += 1000 * philo->contr->time_to_die; 		//Adding lifespan in ms
 	
 
-	while(philo->alive)
-	{
+// 	pthread_mutex_init(&(philo->food_mtx), 0);
 
-		getforks(philo);
 
-		eat(philo);
 
-		dropforks(philo);
 
-		p_action(philo, 2);													//Announce sleep
-		usleep(philo->contr->time_to_sleep);								//Sleep
-	}
-	p_action(philo, 4);														//Announce death
-}
+// 	pthread_create(&pid, 0, (void *)death_loop, (void *)philo); 			//Create death checker
+	
+
+// 	while(philo->alive)
+// 	{
+
+// 		getforks(philo);
+
+// 		eat(philo);
+
+// 		dropforks(philo);
+
+// 		p_action(philo, 2);													//Announce sleep
+// 		usleep(philo->contr->time_to_sleep);								//Sleep
+// 	}
+// 	p_action(philo, 4);														//Announce death
+// }
 
 void spawn(t_contr *contr)
 {
