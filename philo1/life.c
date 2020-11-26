@@ -1,18 +1,37 @@
 #include "philo1.h"
 
-void prep_philo(t_philo *philo)
-{
-	philo->alive = 1;
-	pthread_mutex_init(&(philo->food_mtx), 0);
 
-	gettimeofday(&(philo->alive_untill), 0); 								//Getting spawn time
-	philo->alive_untill.tv_usec += 1000 * philo->contr->time_to_die;		//Adding lifespan in ms
+void add_lifespan(t_philo *philo)
+{
+	gettimeofday(&(philo->alive_untill), 0); //Get curr time							
+
 	
+	philo->alive_untill.tv_usec += (1000 * philo->contr->time_to_die);	//Add lifespan
 	if(philo->alive_untill.tv_usec >= 1000000)
 	{
+		printf("S VAL = %ld\n",philo->alive_untill.tv_sec);
+		printf("US VAL = %ld\n",philo->alive_untill.tv_usec);
 		philo->alive_untill.tv_usec -= 1000000;
 		philo->alive_untill.tv_sec += 1;
 	}
+}
+
+
+void prep_philo(t_philo *philo)
+{
+	philo->alive = 1;
+	pthread_mutex_init(&(philo->philo_mtx), 0);
+
+
+	add_lifespan(philo);
+	// gettimeofday(&(philo->alive_untill), 0); 								//Getting spawn time
+	// philo->alive_untill.tv_usec += (1000 * philo->contr->time_to_die);		//Adding lifespan in ms
+	
+	// if(philo->alive_untill.tv_usec >= 1000000)
+	// {
+	// 	philo->alive_untill.tv_usec -= 1000000;
+	// 	philo->alive_untill.tv_sec += 1;
+	// }
 
 }
 
@@ -35,15 +54,24 @@ void routine_loop(t_philo *philo)
 
 int dies(t_philo *philo, struct timeval time)
 {
-	pthread_mutex_lock(&(philo->food_mtx));
+	pthread_mutex_lock(&(philo->philo_mtx));
 
 	if (time.tv_sec > philo->alive_untill.tv_sec)
+	{
+		printf("D1\n");
 		return 1;
+	}
 	else if (time.tv_sec == philo->alive_untill.tv_sec)
+	{
 		if (time.tv_usec > philo->alive_untill.tv_usec)
+		{
+			printf("D2\n");
 			return 1;
+		}
+	}
 
-	pthread_mutex_unlock(&(philo->food_mtx));
+	philo->alive = 0;
+	pthread_mutex_unlock(&(philo->philo_mtx));
 	return 0;
 
 }
@@ -58,27 +86,21 @@ void life_loop(t_philo *philo)
 
 
 	pthread_create(&pid, 0, (void *)routine_loop, (void *)philo);
-	// pthread_detach(pid);
+	pthread_detach(pid);
 
 
 
 	int alive;
 	struct timeval t;
 
-	gettimeofday(&t, 0),
+	// gettimeofday(&t, 0),
 
 	alive = 1;
 	while (alive)
 	{
 		gettimeofday(&t, 0);
-		if (dies(philo, t))
-		{
-			printline("it should die", philo->id);
-			philo->alive = 0;
-			pthread_mutex_unlock(&(philo->food_mtx));
-			break;
-			// alive = 0;
-		}
+		if (dies(philo, t) && !(alive = 0))
+			p_action(philo, 4);
 		// else
 		// {
 		// 	pthread_mutex_lock(&(philo->contr->stdout));

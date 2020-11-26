@@ -59,8 +59,12 @@ typedef struct m_philo
 {
 	int 			id;
 	int 			alive;
+	
+
+	pthread_mutex_t philo_mtx;
+
+
 	pthread_mutex_t alive_mtx;
-	pthread_mutex_t food_mtx;
 
 	pthread_mutex_t forks[2];
 
@@ -68,7 +72,7 @@ typedef struct m_philo
 
 	unsigned long ttdie;
 
-	pthread_mutex_t philo_mtx;
+	
 
 	struct timeval	ate;
 
