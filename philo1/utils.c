@@ -6,7 +6,7 @@
 /*   By: edal <edal@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:36:43 by edal              #+#    #+#             */
-/*   Updated: 2020/11/01 18:42:34 by edal             ###   ########.fr       */
+/*   Updated: 2020/12/07 21:55:01 by edal             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void ft_putstr(char *str)
 	write(1, str, ft_strlen(str));
 }
 
-void	ft_putnbr_l(long int n)
+void	ft_putnbr_l(unsigned long n)
 {
 	char tmp[2];
 	

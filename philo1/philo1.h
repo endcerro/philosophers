@@ -2,13 +2,14 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   philo1.h                                           :+:      :+:    :+:   */
-/*                                                l    +:+ +:+         +:+     */
+/*                                                    +:+ +:+         +:+     */
 /*   By: edal <edal@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 18:34:51 by edal--ce          #+#    #+#             */
-/*   Updated: 2020/11/01 18:56:03 by edal             ###   ########.fr       */
+/*   Updated: 2020/12/07 21:55:12 by edal             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #ifndef PHILO1_H
 # define PHILO1_H
@@ -66,6 +67,6 @@ void ft_putstr(char *str);
 int ft_strlen(char *str);
 void	ft_putnbr(int n);
 void	ft_putunbr(unsigned int n);
-void	ft_putnbr_l(long int n);
+void	ft_putnbr_l(unsigned long n);
 
 #endif

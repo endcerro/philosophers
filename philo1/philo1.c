@@ -6,7 +6,7 @@
 /*   By: edal <edal@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:14:58 by edal              #+#    #+#             */
-/*   Updated: 2020/11/01 18:55:44 by edal             ###   ########.fr       */
+/*   Updated: 2020/12/07 22:34:17 by edal             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void init_contr(t_contr *contr)
 	int i = 0;
 
 
-	contr->nbr_of_philo = 3;
+	contr->nbr_of_philo = 2;
 	contr->time_to_die = 5000; //5 Sec before dying
 	contr->time_to_eat = 2000; //2 Sec to eat
 	contr->time_to_sleep = 1000; //1 Sec to sleep
@@ -35,23 +35,21 @@ void init_contr(t_contr *contr)
 void print_ts(t_philo *phil, int action)
 {
 	struct timeval delta;
-	long int s;
-	unsigned int ms;
+	unsigned long ms;
 
 
-	gettimeofday(&delta, 0);
-	s = delta.tv_sec - phil->contr->start.tv_sec;
-	ms = (delta.tv_usec - phil->contr->start.tv_usec) / 1000;
-
+	gettimeofday(&delta, 0);	
+	
+	ms = delta.tv_sec * 1000;
+	ms += delta.tv_usec / 100;
+	ms -= phil->contr->start.tv_sec * 1000;
+	ms -= phil->contr->start.tv_usec / 1000;
 
 	pthread_mutex_lock(&(phil->contr->stdout));
 
-	//TO CHANGE
-	// ft_putnbr_l(s);
-	// write(1," ", 1);
-	// ft_putunbr(ms);
-	// write(1," ", 1);
-	// ft_putnbr(phil->id);
+	ft_putnbr_l(ms);
+	write(1," ", 1);
+	ft_putnbr(phil->id);
 
 	if (action == FORK)
 		ft_putstr(" has taken a fork\n");
@@ -136,6 +134,7 @@ void spawn_philos(t_contr *contr)
 	pthread_t pid[contr->nbr_of_philo];
 	t_philo philos[contr->nbr_of_philo];
 
+	gettimeofday(&(contr->start), 0);
 	i = -1;
 	while(++i < contr->nbr_of_philo)
 	{
