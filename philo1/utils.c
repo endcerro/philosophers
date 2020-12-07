@@ -62,6 +62,23 @@ void	ft_putnbr_l(long int n)
 }
 
 
+void	ft_putunbr(unsigned int n)
+{
+	char tmp[2];
+	tmp[1] = 0;
+
+	if (n >= 10)
+	{
+		ft_putunbr(n / 10);
+		tmp[0] = n % 10 + '0';
+		ft_putstr(tmp);
+	}
+	else
+	{
+		tmp[0] = n + '0';
+		ft_putstr(tmp);
+	}
+}
 
 void	ft_putnbr(int n)
 {

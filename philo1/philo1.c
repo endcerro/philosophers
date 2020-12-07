@@ -32,6 +32,43 @@ void init_contr(t_contr *contr)
 }
 
 
+void print_ts(t_philo *phil, int action)
+{
+	struct timeval delta;
+	long int s;
+	unsigned int ms;
+
+
+	gettimeofday(&delta, 0);
+	s = delta.tv_sec - phil->contr->start.tv_sec;
+	ms = (delta.tv_usec - phil->contr->start.tv_usec) / 1000;
+
+
+	pthread_mutex_lock(&(phil->contr->stdout));
+
+	//TO CHANGE
+	// ft_putnbr_l(s);
+	// write(1," ", 1);
+	// ft_putunbr(ms);
+	// write(1," ", 1);
+	// ft_putnbr(phil->id);
+
+	if (action == FORK)
+		ft_putstr(" has taken a fork\n");
+	else if (action == EAT)	
+		ft_putstr(" is eating\n");
+	else if (action == SLEEP)
+		ft_putstr(" is sleeping\n");
+	else if (action == THINK)
+		ft_putstr(" is thinking\n");
+	else if (action == DIE)
+		ft_putstr(" died\n");
+
+	pthread_mutex_unlock(&(phil->contr->stdout));
+
+}
+
+
 void print(char *str, t_contr *contr)
 {
 	pthread_mutex_lock(&(contr->stdout));
@@ -85,7 +122,7 @@ void loop(t_philo *phil)
 			print_nb("It died", phil->id, phil->contr);
 			return ;
 		}
-		print_nb("Hi this is a philo spawn ", phil->id, phil->contr);
+		print_ts(phil, EAT);
 		usleep(phil->contr->time_to_sleep * 1000); //Usleeep uses microseconds
 	}
 

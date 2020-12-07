@@ -20,6 +20,13 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#define FORK 0
+#define EAT 1
+#define SLEEP 2
+#define THINK 3
+#define DIE 4
+
+
 typedef struct m_contr
 {	
 	int 	nbr_of_philo;		
@@ -58,6 +65,7 @@ int	ft_atoi(const char *in);
 void ft_putstr(char *str);
 int ft_strlen(char *str);
 void	ft_putnbr(int n);
+void	ft_putunbr(unsigned int n);
 void	ft_putnbr_l(long int n);
 
 #endif
