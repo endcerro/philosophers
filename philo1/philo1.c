@@ -12,164 +12,126 @@
 
 #include "philo1.h"
 
-int init(int argc, char **argv, t_contr *contr)
+void init_contr(t_contr *contr)
 {
-	// if (argc < 5 || argc > 6)
-	// {
-	// 	printf("ERROR ARG COUNT\n");
-	// 	return (1);
-	// }
-	// contr->nbr_of_philo = (unsigned int)ft_atoi(argv[1]);
-	// contr->time_to_die = (unsigned int)ft_atoi(argv[2]);
-	// contr->time_to_eat = (unsigned int)ft_atoi(argv[3]);
-	// contr->time_to_sleep = (unsigned int)ft_atoi(argv[4]);
-	contr->nbr_of_philo = 	2;
-	contr->time_to_die = 	100000;		// 	10 Secs before dying
-	contr->time_to_eat = 	2000; 		//	2 Secs to eat
-	contr->time_to_sleep = 	3000; 		//	3 Secs to sleep
-	contr->must_eat = -1;
-	if (argc == 6)
-		contr->must_eat = ft_atoi(argv[5]);
-	contr->print_lock = 0;
+	int i = 0;
 
-	return (0);
-}
 
-void printline(char *str, int val)
-{
-	ft_putstr(str);
-	ft_putnbr(val);
-	write(1, "\n", 1);
-}
+	contr->nbr_of_philo = 3;
+	contr->time_to_die = 5000; //5 Sec before dying
+	contr->time_to_eat = 2000; //2 Sec to eat
+	contr->time_to_sleep = 1000; //1 Sec to sleep
 
-void p_ts(t_contr *contr)
-{
-	struct timeval t;
-
-	gettimeofday(&t, 0);
 	
-	int sec = t.tv_sec - contr->start.tv_sec;
-	int usec = t.tv_usec - contr->start.tv_usec;
-
-
-	if (usec < 0)
+	contr->forks = malloc(sizeof(pthread_mutex_t) * contr->nbr_of_philo);
+	while(i < contr->nbr_of_philo)
 	{
-		sec--;
-		usec += 1000000;
+		pthread_mutex_init(&(contr->forks[i++]), 0);
 	}
+	pthread_mutex_init(&(contr->stdout), 0);
+}
+
+
+void print(char *str, t_contr *contr)
+{
+	pthread_mutex_lock(&(contr->stdout));
+	ft_putstr(str);
+	pthread_mutex_unlock(&(contr->stdout));
+}
+
+void print_nb(char *str, int i, t_contr *contr)
+{
+	pthread_mutex_lock(&(contr->stdout));
+	ft_putstr(str);
+	ft_putnbr(i);
+	write(1,"\n",1);
+	pthread_mutex_unlock(&(contr->stdout));
+}
+
+int check_alive(t_philo *phil)
+{
+	struct timeval time;
+	struct timeval lifespan;
+
+	gettimeofday(&time, 0);
+	lifespan = phil->lmeal;
+
+	lifespan.tv_usec += phil->contr->time_to_die * 1000;
 	
-	ft_putnbr(sec);
-	write(1," ", 1);
+	while (lifespan.tv_usec >= 1000000)
+	{
+		lifespan.tv_usec -= 1000000;
+		lifespan.tv_sec += 1;
+	}
+
+	if (time.tv_sec > lifespan.tv_sec)
+		return (0);
+	else if (time.tv_sec == lifespan.tv_sec && time.tv_sec >= lifespan.tv_usec)
+		return (0);
 	
-	ft_putnbr(usec);
-
-
+	return (1);
 }
 
-void p_action(t_philo *p, int action)
+
+void loop(t_philo *phil)
 {
-	pthread_mutex_lock(&(p->contr->stdout));
-	p_ts(p->contr);
-	write(1," ",1);
-	ft_putnbr(p->id);
-	if (action == 0)
-		ft_putstr(" has taken a fork\n");
-	else if(action == 1)
-		ft_putstr(" is eating\n");
-	else if(action == 2)
-		ft_putstr(" is sleeping\n");
-	else if(action == 3)
-		ft_putstr(" is thinking\n");
-	else if(action == 4)
-		ft_putstr(" died\n");
+	phil->alive = 1;
 
-	pthread_mutex_unlock(&(p->contr->stdout));
+	gettimeofday(&(phil->lmeal), 0);
+	while(phil->alive)
+	{
+		if (!check_alive(phil))
+		{
+			print_nb("It died", phil->id, phil->contr);
+			return ;
+		}
+		print_nb("Hi this is a philo spawn ", phil->id, phil->contr);
+		usleep(phil->contr->time_to_sleep * 1000); //Usleeep uses microseconds
+	}
+
+	return;
 }
 
-
-void getforks(t_philo *philo)
-{
-	pthread_mutex_lock(&(philo->contr->mutex[0])); 						//Lock first fork
-	// p_action(philo, 0);													//Announce it
-		
-
-	pthread_mutex_lock(&(philo->contr->mutex[1]));						//Lock second fork
-	p_action(philo, 0);													//Announce it
-
-}
-
-void eat(t_philo *philo)
-{
-	pthread_mutex_lock(&(philo->philo_mtx));								//Locking food
-	p_action(philo, 1);													//Announce it
-	usleep(philo->contr->time_to_eat);									//Eating time
-
-	add_lifespan(philo);
-	// gettimeofday(&(philo->alive_untill), 0);							//Reset time
-	// philo->alive_untill.tv_usec += (1000 * philo->contr->time_to_die);	//Add lifespan
-	// if(philo->alive_untill.tv_usec >= 1000000)
-	// {
-	// 	philo->alive_untill.tv_usec -= 1000000;
-	// 	philo->alive_untill.tv_sec += 1;
-	// }
-
-	pthread_mutex_unlock(&(philo->philo_mtx));							//Release food
-}
-
-void dropforks(t_philo *philo)
-{
-	pthread_mutex_unlock(&(philo->contr->mutex[0]));					//Release fork
-	pthread_mutex_unlock(&(philo->contr->mutex[1]));					//Release fork
-}
-
-
-void spawn(t_contr *contr)
+void spawn_philos(t_contr *contr)
 {
 	int i;
-	pthread_t 	pid[contr->nbr_of_philo];		//PID ARRAY
-	t_philo 	philo[contr->nbr_of_philo];		//Struct array
 
+	pthread_t pid[contr->nbr_of_philo];
+	t_philo philos[contr->nbr_of_philo];
 
-
-
-	i = 0;
-
-	gettimeofday(&(contr->start), 0);			//Timer since the start of program
-
-	pthread_mutex_init(&(contr->stdout), 0);	//stdout mutex for collisions
-
-
-	while( i < contr->nbr_of_philo) 			//Setup philos
+	i = -1;
+	while(++i < contr->nbr_of_philo)
 	{
-		pthread_mutex_init(&(contr->mutex[i]), 0);			//TO CHANGE
-		philo[i].contr = contr;								//Contr link
-		philo[i].id = i;									//Id set
-		pthread_mutex_init(&((philo[i]).philo_mtx), 0);		//Init philo mtx
-		pthread_create(&(pid[i]), 0, (void *)life_loop, (void *)&(philo[i])); //Start
-		i++;
+		philos[i].contr = contr;
+		philos[i].id = i;
+		pthread_create(&(pid[i]), 0, (void*)loop, (void*)&(philos[i]));
 	}
-
-
-
-	i = 0;
-	while( i < contr->nbr_of_philo)
+	i = -1;
+	while(++i < contr->nbr_of_philo)
 	{
 		pthread_join(pid[i], 0);
-		i++;
-	}
-	for(int j = 0; j < contr->nbr_of_philo; j++)
-	{
-		pthread_mutex_destroy(&(philo[j].philo_mtx));
-		pthread_mutex_destroy(&(contr->mutex[j]));
 	}
 }
 
 
-int main(int argc, char **argv)
+void cleanup(t_contr *contr)
+{
+	int i = 0;
+	while(i < contr->nbr_of_philo)
+	{
+		pthread_mutex_destroy(&(contr->forks[i++]));
+	}
+	free(contr->forks);
+	pthread_mutex_destroy(&(contr->stdout));
+}
+
+int main()
 {
 	t_contr contr;
-	init(argc, argv, &contr);
-	/* code */
-	spawn(&contr);
+
+	init_contr(&contr);
+	spawn_philos(&contr);
+	cleanup(&contr);
+	
 	return 0;
 }

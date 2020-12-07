@@ -20,74 +20,44 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-typedef struct m_test
-{	
-	int 			id;
-	pthread_mutex_t *mutex;
-	pthread_mutex_t *check;
-	int 			*lock;
-
-} t_test;
-
-
-
-
 typedef struct m_contr
 {	
-	unsigned int 	nbr_of_philo;
-	unsigned long 	time_to_die;
-	unsigned int 	time_to_eat;
-	unsigned int 	time_to_sleep;
-	int 			must_eat;
-	pthread_mutex_t mutex[2];
-
+	int 	nbr_of_philo;		
+	unsigned long 	time_to_die;		//In miliseconds
+	unsigned int 	time_to_eat;		//In miliseconds
+	unsigned int 	time_to_sleep;		//In miliseconds
 
 	pthread_mutex_t stdout;
 
 
-	int lock;
+	pthread_mutex_t *forks;
+
 
 
 	struct timeval	start;
-	int 			*forks;
-
-	int 			print_lock;
-
 } t_contr;
+
 
 typedef struct m_philo
 {
 	int 			id;
 	int 			alive;
-	
+	struct timeval 	lmeal;
 
-	pthread_mutex_t philo_mtx;
-
-
-	pthread_mutex_t alive_mtx;
-
-	pthread_mutex_t forks[2];
+	pthread_mutex_t lock;
 
 	t_contr *contr;
-
-	unsigned long ttdie;
-
 	
-
-	struct timeval	ate;
-
-
-	struct timeval  alive_untill;
-
 } t_philo;
 
 
 
+/* UTILS */ 
+
 int	ft_atoi(const char *in);
 void ft_putstr(char *str);
 int ft_strlen(char *str);
-void printinit(t_contr *contr);
 void	ft_putnbr(int n);
 void	ft_putnbr_l(long int n);
-void life_loop(t_philo *philo);
+
 #endif
