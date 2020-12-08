@@ -18,8 +18,8 @@ void init_contr(t_contr *contr)
 
 
 	contr->nbr_of_philo = 2;
-	contr->time_to_die = 5000; //5 Sec before dying
-	contr->time_to_eat = 2000; //2 Sec to eat
+	contr->time_to_die = 4000; //5 Sec before dying
+	contr->time_to_eat = 3000; //2 Sec to eat
 	contr->time_to_sleep = 1000; //1 Sec to sleep
 
 	
@@ -31,80 +31,106 @@ void init_contr(t_contr *contr)
 	pthread_mutex_init(&(contr->stdout), 0);
 }
 
-
-void print_ts(t_philo *phil, int action)
-{
-	struct timeval delta;
-	unsigned long ms;
-
-
-	gettimeofday(&delta, 0);	
-	
-	ms = delta.tv_sec * 1000;
-	ms += delta.tv_usec / 100;
-	ms -= phil->contr->start.tv_sec * 1000;
-	ms -= phil->contr->start.tv_usec / 1000;
-
-	pthread_mutex_lock(&(phil->contr->stdout));
-
-	ft_putnbr_l(ms);
-	write(1," ", 1);
-	ft_putnbr(phil->id);
-
-	if (action == FORK)
-		ft_putstr(" has taken a fork\n");
-	else if (action == EAT)	
-		ft_putstr(" is eating\n");
-	else if (action == SLEEP)
-		ft_putstr(" is sleeping\n");
-	else if (action == THINK)
-		ft_putstr(" is thinking\n");
-	else if (action == DIE)
-		ft_putstr(" died\n");
-
-	pthread_mutex_unlock(&(phil->contr->stdout));
-
-}
-
-
-void print(char *str, t_contr *contr)
-{
-	pthread_mutex_lock(&(contr->stdout));
-	ft_putstr(str);
-	pthread_mutex_unlock(&(contr->stdout));
-}
-
-void print_nb(char *str, int i, t_contr *contr)
-{
-	pthread_mutex_lock(&(contr->stdout));
-	ft_putstr(str);
-	ft_putnbr(i);
-	write(1,"\n",1);
-	pthread_mutex_unlock(&(contr->stdout));
-}
-
 int check_alive(t_philo *phil)
 {
 	struct timeval time;
 	struct timeval lifespan;
 
 	gettimeofday(&time, 0);
+
+/*	unsigned long life = 0;
+	unsigned long untill = 0;
+	life += phil->lmeal.tv_sec * 1000; 	//sec to ms
+	life += phil->lmeal.tv_usec / 1000;	//usec to ms
+	life += phil->contr->time_to_eat;	//ms to ms
+	untill += time.tv_sec * 1000;		//sec to ms
+	untill += time.tv_usec / 1000;		//usec to ms
+	if (life > untill)
+		return 1;
+	return (0);
+*/
+
 	lifespan = phil->lmeal;
 
 	lifespan.tv_usec += phil->contr->time_to_die * 1000;
-	
 	while (lifespan.tv_usec >= 1000000)
 	{
 		lifespan.tv_usec -= 1000000;
 		lifespan.tv_sec += 1;
 	}
-
 	if (time.tv_sec > lifespan.tv_sec)
 		return (0);
 	else if (time.tv_sec == lifespan.tv_sec && time.tv_sec >= lifespan.tv_usec)
 		return (0);
 	
 	return (1);
+}
+
+// pthread_mutex_t *getforks(t_philo *phil)
+// {
+// 	pthread_mutex_t mtx[2];
+
+// 	mtx[0] = phil->contr->forks[phil->id];
+// 	mtx[1] = phil->contr->forks[phil->id + 1 % phil->contr->nbr_of_philo];
+
+// 	return (mtx);
+// }
+
+int sleepcheck(unsigned int zzz, t_philo *phil)
+{
+	unsigned int t;
+	int quot;
+
+	quot = 10;
+
+	t = zzz / quot;
+	int i = 0;
+	while(i < quot)
+	{
+		usleep(t);
+		// t += zzz / 10;
+		if (!check_alive(phil))
+			return (1);
+	}
+	return (0);
+}
+
+
+int eat(t_philo *phil)
+{
+	// pthread_mutex_t forks[2];
+	int ret;
+
+	ret = 1;
+	// forks[0] = phil->contr->forks[phil->id];
+	// forks[1] = phil->contr->forks[(phil->id + 1) % phil->contr->nbr_of_philo];
+
+	pthread_mutex_lock(&(phil->contr->forks[phil->id]));
+	print_ts(phil, FORK);
+	pthread_mutex_lock(&(phil->contr->forks[(phil->id + 1) % phil->contr->nbr_of_philo]));
+	print_ts(phil, FORK);
+	if (check_alive(phil))
+	{
+		print_ts(phil, EAT);
+		usleep(phil->contr->time_to_eat * 1000);
+		gettimeofday(&(phil->lmeal), 0);
+		// usleep(phil->contr->time_to_eat * 1000);
+		ret--;
+	}
+	else
+		print_ts(phil, DIE);
+	// else
+	// {
+	// 	printf("Oh no %d should die \n", phil->id);	
+	// }
+
+	pthread_mutex_unlock(&(phil->contr->forks[phil->id]));
+	pthread_mutex_unlock(&(phil->contr->forks[(phil->id + 1) % phil->contr->nbr_of_philo]));
+
+	// pthread_mutex_unlock(&(forks[0]));
+	// pthread_mutex_unlock(&(forks[1]));
+
+	return (ret);
 }
 
 
@@ -117,10 +143,18 @@ void loop(t_philo *phil)
 	{
 		if (!check_alive(phil))
 		{
-			print_nb("It died", phil->id, phil->contr);
-			return ;
+			return print_ts(phil, DIE);
 		}
-		print_ts(phil, EAT);
+		// eat(phil);
+		if (eat(phil) == 1)
+			return ;//rint_ts(phil, DIE);
+		// print_ts(phil, EAT);
+		// if (sleepcheck(phil->contr->time_to_sleep * 1000, phil))
+		// {
+		// 	printf("%d died in his sleep", phil->id);
+		// 	return;
+		// }
+		print_ts(phil, SLEEP);
 		usleep(phil->contr->time_to_sleep * 1000); //Usleeep uses microseconds
 	}
 
@@ -163,11 +197,12 @@ void cleanup(t_contr *contr)
 
 int main()
 {
-	t_contr contr;
+	t_contr contrn;
 
-	init_contr(&contr);
-	spawn_philos(&contr);
-	cleanup(&contr);
+	contr = &contrn;
+	init_contr(&contrn);
+	spawn_philos(&contrn);
+	cleanup(&contrn);
 	
 	return 0;
 }

@@ -28,6 +28,8 @@
 #define DIE 4
 
 
+
+
 typedef struct m_contr
 {	
 	int 	nbr_of_philo;		
@@ -35,30 +37,32 @@ typedef struct m_contr
 	unsigned int 	time_to_eat;		//In miliseconds
 	unsigned int 	time_to_sleep;		//In miliseconds
 
-	pthread_mutex_t stdout;
-
-
-	pthread_mutex_t *forks;
-
-
-
-	struct timeval	start;
+	pthread_mutex_t stdout;				//STDOUT mutex
+	pthread_mutex_t *forks;				//mutex array for forks
+	struct timeval	start;				//Start of the program
 } t_contr;
 
 
 typedef struct m_philo
 {
-	int 			id;
-	int 			alive;
-	struct timeval 	lmeal;
+	int 			id;					//ID
+	int 			alive;				//Bool alive ?
+	struct timeval 	lmeal;				//Last meal, update when eat
 
-	pthread_mutex_t lock;
+	pthread_mutex_t lock;				//Lock on the phil, check alive
 
-	t_contr *contr;
+	t_contr *contr;						//Ref to contr
 	
 } t_philo;
 
+t_contr			*contr;
 
+
+/* PHILO TOOLS */
+void init_contr(t_contr *contr);
+void print_ts(t_philo *phil, int action);
+void print(char *str, t_contr *contr);
+void print_nb(char *str, int i, t_contr *contr);
 
 /* UTILS */ 
 
