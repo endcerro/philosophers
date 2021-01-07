@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edal <edal@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:36:43 by edal              #+#    #+#             */
-/*   Updated: 2020/12/07 21:55:01 by edal             ###   ########.fr       */
+/*   Updated: 2021/01/07 17:57:55 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,33 +16,42 @@ void print_ts(t_philo *phil, int action)
 {
 	struct timeval delta;
 	unsigned long ms;
+	char buff[1000];
 
-
-	gettimeofday(&delta, 0);	
-	
+	gettimeofday(&delta, 0);		
 	ms = delta.tv_sec * 1000;
 	ms += delta.tv_usec / 100;
 	ms -= phil->contr->start.tv_sec * 1000;
 	ms -= phil->contr->start.tv_usec / 1000;
 
-	pthread_mutex_lock(&(phil->contr->stdout));
 
-	ft_putnbr_l(ms);
-	write(1," ", 1);
-	ft_putnbr(phil->id);
+	// pthread_mutex_lock(&(phil->contr->stdout));
+	buff[0] = 0;
+	char *tmp;
 
+	tmp = ft_itoa(ms);
+	
+	ft_strlcat(buff, tmp, 1000);
+	free(tmp);
+	ft_strlcat(buff, " ", 1000);
+
+	tmp = ft_itoa((unsigned long)phil->id);
+	
+	ft_strlcat(buff, tmp, 1000);
+	free(tmp);
+	
 	if (action == FORK)
-		ft_putstr(" has taken a fork\n");
-	else if (action == EAT)	
-		ft_putstr(" is eating\n");
+		ft_strlcat(buff," has taken a fork\n",1000);
+	else if (action == EAT)
+		ft_strlcat(buff," is eating\n", 1000);
 	else if (action == SLEEP)
-		ft_putstr(" is sleeping\n");
+		ft_strlcat(buff," is sleeping\n", 1000);
 	else if (action == THINK)
-		ft_putstr(" is thinking\n");
+		ft_strlcat(buff, " is thinking\n", 1000);
 	else if (action == DIE)
-		ft_putstr(" died\n");
-
-	pthread_mutex_unlock(&(phil->contr->stdout));
+		ft_strlcat(buff, " died\n", 1000);
+	write(1, buff, ft_strlen(buff));
+	// pthread_mutex_unlock(&(phil->contr->stdout));
 
 	// return (0);
 }
