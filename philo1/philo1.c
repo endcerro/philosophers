@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:14:58 by edal              #+#    #+#             */
-/*   Updated: 2021/01/10 16:20:40 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/01/10 16:37:48 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,12 +72,11 @@ int eat(t_philo *phil)
 	pthread_mutex_lock(&(phil->contr->forks[(phil->id + 1) % phil->contr->nbr_of_philo]));
 	print_ts(phil, FORK);
 	
-	print_ts(phil, EAT);
 	pthread_mutex_lock(&(phil->alive_l));
-	gettimeofday(&(phil->lmeal), 0);
+	print_ts(phil, EAT);
 	sleepcheck(phil->contr->time_to_eat * 1000, phil);
+	gettimeofday(&(phil->lmeal), 0);
 	pthread_mutex_unlock(&(phil->alive_l));
-
 
 	pthread_mutex_unlock(&(phil->contr->forks[phil->id]));
 	pthread_mutex_unlock(&(phil->contr->forks[(phil->id + 1) % phil->contr->nbr_of_philo]));
@@ -99,13 +98,13 @@ void loop(t_philo *phil)
 		eat(phil);
 		if (++cpt == phil->contr->must_eat)
 		{
+			phil->contr->did_eat++;
 			phil->alive = 0;
 			break;
 		}
 		print_ts(phil, SLEEP);
 		sleepcheck(phil->contr->time_to_sleep * 1000, phil);
 	}
-	printf("%d ATE %d times\n",phil->id, cpt );
 	return;
 }
 
@@ -113,6 +112,7 @@ void life(t_philo *phil)
 {
 	while (phil->alive)
 	{
+		usleep(10);
 		pthread_mutex_lock(&(phil->alive_l));
 		if (!check_alive(phil))
 			print_ts(phil, DIE);
@@ -128,6 +128,7 @@ void spawn_philos(t_contr *contr)
 	pthread_t pid_l[contr->nbr_of_philo];
 	t_philo philos[contr->nbr_of_philo];
 
+	contr->did_eat = 0;
 	gettimeofday(&(contr->start), 0);
 	i = -1;
 	while(++i < contr->nbr_of_philo)
@@ -137,13 +138,17 @@ void spawn_philos(t_contr *contr)
 		pthread_mutex_init(&(philos[i].alive_l), 0);
 		pthread_create(&(pid[i]), 0, (void*)loop, (void*)&(philos[i]));
 		pthread_create(&(pid_l[i]), 0, (void*)life, (void*)&(philos[i]));
-		usleep(100);
+		usleep(50);
 	}
 	i = -1;
+
 	while(++i < contr->nbr_of_philo)
 	{
+		pthread_mutex_destroy(&(philos[i].alive_l));
 		pthread_join(pid_l[i], 0);
 	}
+	if (contr->did_eat == contr->nbr_of_philo)
+		write(1, "All philos ate as supposed\n", 27);
 }
 
 
