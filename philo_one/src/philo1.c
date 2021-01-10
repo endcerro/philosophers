@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:14:58 by edal              #+#    #+#             */
-/*   Updated: 2021/01/10 17:20:01 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/01/10 18:40:27 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,8 @@ int		main(int argc, char **argv)
 		return (0);
 	}
 	contr = &contrn;
-	init_contr(contr, argv, argc);
+	if (init_contr(contr, argv, argc))
+		return (1);
 	spawn_philos(&contrn);
 	cleanup(&contrn);
 	return (0);

@@ -6,13 +6,13 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:36:43 by edal              #+#    #+#             */
-/*   Updated: 2021/01/10 17:23:32 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/01/10 18:41:13 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo1.h"
 
-void	init_contr(t_contr *contr, char **argv, int argc)
+int		init_contr(t_contr *contr, char **argv, int argc)
 {
 	int i;
 
@@ -26,9 +26,11 @@ void	init_contr(t_contr *contr, char **argv, int argc)
 	contr->did_eat = 0;
 	if (argc == 6)
 		contr->must_eat = ft_atoi(argv[5]);
-	contr->forks = malloc(sizeof(pthread_mutex_t) * contr->nbr_of_philo);
+	if (!(contr->forks = malloc(sizeof(pthread_mutex_t) * contr->nbr_of_philo)))
+		return (1);
 	while (i < contr->nbr_of_philo)
 		pthread_mutex_init(&(contr->forks[i++]), 0);
+	return (0);
 }
 
 void	print_ac(char *buff, int action)
@@ -63,7 +65,7 @@ void	print_ts(t_philo *phil, int action)
 	ft_strlcat(buff, tmp, 1000);
 	free(tmp);
 	ft_strlcat(buff, "ms ", 1000);
-	tmp = ft_itoa((unsigned long)phil->id);
+	tmp = ft_itoa((unsigned long)phil->id + 1);
 	ft_strlcat(buff, tmp, 1000);
 	free(tmp);
 	if (phil->alive == 0 || phil->contr->end)

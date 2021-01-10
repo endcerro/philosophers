@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 18:34:51 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/01/10 17:35:57 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/01/10 18:40:46 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,13 +47,12 @@ typedef	struct		s_philo
 	t_contr			*contr;
 }					t_philo;
 struct s_contr		*contr;
-void				init_contr(t_contr *contr, char **argv, int argc);
+int					init_contr(t_contr *contr, char **argv, int argc);
 void				print_ts(t_philo *phil, int action);
 void				life(t_philo *phil);
 int					eat(t_philo *phil);
 int					check_alive(t_philo *phil);
 int					ft_atoi(const char *in);
-void				ft_putstr(char *str);
 int					ft_strlen(char *str);
 char				*ft_itoa(unsigned long n);
 size_t				ft_strlcat(char *dst, char *src, size_t size);
