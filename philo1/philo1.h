@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 18:34:51 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/01/10 17:34:32 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/01/10 17:35:57 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 # define THINK 3
 # define DIE 4
 
-typedef	struct		m_contr
+typedef	struct		s_contr
 {
 	int				nbr_of_philo;
 	int				time_to_die;
@@ -38,7 +38,7 @@ typedef	struct		m_contr
 	pthread_mutex_t *forks;
 	struct timeval	start;
 }					t_contr;
-typedef	struct		m_philo
+typedef	struct		s_philo
 {
 	int				id;
 	int				alive;
@@ -46,7 +46,7 @@ typedef	struct		m_philo
 	pthread_mutex_t	alive_l;
 	t_contr			*contr;
 }					t_philo;
-struct m_contr		*contr;
+struct s_contr		*contr;
 void				init_contr(t_contr *contr, char **argv, int argc);
 void				print_ts(t_philo *phil, int action);
 void				life(t_philo *phil);
