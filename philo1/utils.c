@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:36:43 by edal              #+#    #+#             */
-/*   Updated: 2021/01/07 17:57:55 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/01/10 16:23:13 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,30 +17,30 @@ void print_ts(t_philo *phil, int action)
 	struct timeval delta;
 	unsigned long ms;
 	char buff[1000];
-
-	gettimeofday(&delta, 0);		
-	ms = delta.tv_sec * 1000;
-	ms += delta.tv_usec / 100;
-	ms -= phil->contr->start.tv_sec * 1000;
-	ms -= phil->contr->start.tv_usec / 1000;
-
-
-	// pthread_mutex_lock(&(phil->contr->stdout));
-	buff[0] = 0;
 	char *tmp;
 
-	tmp = ft_itoa(ms);
+	gettimeofday(&delta, 0);		
 	
-	ft_strlcat(buff, tmp, 1000);
-	free(tmp);
-	ft_strlcat(buff, " ", 1000);
+	ms = delta.tv_sec * 1000000;
+	ms += delta.tv_usec;
+	ms -= phil->contr->start.tv_sec * 1000000;
+	ms -= phil->contr->start.tv_usec;
 
+	ms = ms / 1000;
+	buff[0] = 0;
+	tmp = ft_itoa(ms);
+
+	ft_strlcat(buff, tmp, 1000);
+	free(tmp);
+	ft_strlcat(buff, "ms ", 1000);
 	tmp = ft_itoa((unsigned long)phil->id);
-	
+
 	ft_strlcat(buff, tmp, 1000);
 	free(tmp);
 	
-	if (action == FORK)
+	if (phil->alive == 0 || phil->contr->end)
+		return;
+	if (action == FORK )
 		ft_strlcat(buff," has taken a fork\n",1000);
 	else if (action == EAT)
 		ft_strlcat(buff," is eating\n", 1000);
@@ -51,30 +51,7 @@ void print_ts(t_philo *phil, int action)
 	else if (action == DIE)
 		ft_strlcat(buff, " died\n", 1000);
 	write(1, buff, ft_strlen(buff));
-	// pthread_mutex_unlock(&(phil->contr->stdout));
-
-	// return (0);
 }
-
-
-void print(char *str, t_contr *contr)
-{
-	pthread_mutex_lock(&(contr->stdout));
-	ft_putstr(str);
-	pthread_mutex_unlock(&(contr->stdout));
-}
-
-void print_nb(char *str, int i, t_contr *contr)
-{
-	pthread_mutex_lock(&(contr->stdout));
-	ft_putstr(str);
-	ft_putnbr(i);
-	write(1,"\n",1);
-	pthread_mutex_unlock(&(contr->stdout));
-}
-
-
-
 
 int	ft_atoi(const char *in)
 {
