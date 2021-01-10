@@ -1,18 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   itoa.c                                             :+:      :+:    :+:   */
+/*   extern.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/07 15:34:20 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/01/07 16:36:05 by edal--ce         ###   ########.fr       */
+/*   Created: 2021/01/10 17:10:15 by edal--ce          #+#    #+#             */
+/*   Updated: 2021/01/10 17:14:57 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo1.h"
 
-size_t	ft_strlcat(char *dst, char *src, size_t size)
+int				ft_strlen(char *str)
+{
+	int i;
+
+	i = 0;
+	while (str[i])
+		i++;
+	return (i);
+}
+
+size_t			ft_strlcat(char *dst, char *src, size_t size)
 {
 	int i;
 	int posdst;
@@ -32,7 +42,7 @@ size_t	ft_strlcat(char *dst, char *src, size_t size)
 	return (posdst + ft_strlen(src));
 }
 
-static unsigned long		getlen(unsigned long n)
+unsigned long	getlen(unsigned long n)
 {
 	unsigned long		i;
 
@@ -47,7 +57,7 @@ static unsigned long		getlen(unsigned long n)
 	return (i);
 }
 
-unsigned long				ft_pow(unsigned long nb, unsigned long pow)
+unsigned long	ft_pow(unsigned long nb, unsigned long pow)
 {
 	unsigned long		i;
 	unsigned long		dest;
@@ -61,9 +71,9 @@ unsigned long				ft_pow(unsigned long nb, unsigned long pow)
 
 char			*ft_itoa(unsigned long n)
 {
-	char	*out;
+	char				*out;
 	unsigned long		len;
-	unsigned long		i;	
+	unsigned long		i;
 	unsigned long		indxo;
 
 	indxo = 0;

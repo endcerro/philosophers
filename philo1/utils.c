@@ -6,46 +6,39 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:36:43 by edal              #+#    #+#             */
-/*   Updated: 2021/01/10 16:23:13 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/01/10 17:23:32 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo1.h"
 
-void print_ts(t_philo *phil, int action)
+void	init_contr(t_contr *contr, char **argv, int argc)
 {
-	struct timeval delta;
-	unsigned long ms;
-	char buff[1000];
-	char *tmp;
+	int i;
 
-	gettimeofday(&delta, 0);		
-	
-	ms = delta.tv_sec * 1000000;
-	ms += delta.tv_usec;
-	ms -= phil->contr->start.tv_sec * 1000000;
-	ms -= phil->contr->start.tv_usec;
+	i = 0;
+	contr->nbr_of_philo = ft_atoi(argv[1]);
+	contr->time_to_die = ft_atoi(argv[2]);
+	contr->time_to_eat = ft_atoi(argv[3]);
+	contr->time_to_sleep = ft_atoi(argv[4]);
+	contr->must_eat = -1;
+	contr->end = 0;
+	contr->did_eat = 0;
+	if (argc == 6)
+		contr->must_eat = ft_atoi(argv[5]);
+	contr->forks = malloc(sizeof(pthread_mutex_t) * contr->nbr_of_philo);
+	while (i < contr->nbr_of_philo)
+		pthread_mutex_init(&(contr->forks[i++]), 0);
+}
 
-	ms = ms / 1000;
-	buff[0] = 0;
-	tmp = ft_itoa(ms);
-
-	ft_strlcat(buff, tmp, 1000);
-	free(tmp);
-	ft_strlcat(buff, "ms ", 1000);
-	tmp = ft_itoa((unsigned long)phil->id);
-
-	ft_strlcat(buff, tmp, 1000);
-	free(tmp);
-	
-	if (phil->alive == 0 || phil->contr->end)
-		return;
-	if (action == FORK )
-		ft_strlcat(buff," has taken a fork\n",1000);
+void	print_ac(char *buff, int action)
+{
+	if (action == FORK)
+		ft_strlcat(buff, " has taken a fork\n", 1000);
 	else if (action == EAT)
-		ft_strlcat(buff," is eating\n", 1000);
+		ft_strlcat(buff, " is eating\n", 1000);
 	else if (action == SLEEP)
-		ft_strlcat(buff," is sleeping\n", 1000);
+		ft_strlcat(buff, " is sleeping\n", 1000);
 	else if (action == THINK)
 		ft_strlcat(buff, " is thinking\n", 1000);
 	else if (action == DIE)
@@ -53,7 +46,32 @@ void print_ts(t_philo *phil, int action)
 	write(1, buff, ft_strlen(buff));
 }
 
-int	ft_atoi(const char *in)
+void	print_ts(t_philo *phil, int action)
+{
+	struct timeval	delta;
+	unsigned long	ms;
+	char			buff[1000];
+	char			*tmp;
+
+	gettimeofday(&delta, 0);
+	ms = delta.tv_sec * 1000000;
+	ms += delta.tv_usec;
+	ms -= phil->contr->start.tv_sec * 1000000 + phil->contr->start.tv_usec;
+	ms = ms / 1000;
+	buff[0] = 0;
+	tmp = ft_itoa(ms);
+	ft_strlcat(buff, tmp, 1000);
+	free(tmp);
+	ft_strlcat(buff, "ms ", 1000);
+	tmp = ft_itoa((unsigned long)phil->id);
+	ft_strlcat(buff, tmp, 1000);
+	free(tmp);
+	if (phil->alive == 0 || phil->contr->end)
+		return ;
+	print_ac(buff, action);
+}
+
+int		ft_atoi(const char *in)
 {
 	int pos;
 	int nb;
@@ -70,74 +88,4 @@ int	ft_atoi(const char *in)
 	while (*in < 58 && *in > 47)
 		nb = nb * 10 + (*(in++) - '0');
 	return (nb * pos);
-}
-
-int ft_strlen(char *str)
-{
-	int i;
-
-	i = 0;
-	while (str[i])
-		i++;
-	return (i);
-}
-
-void ft_putstr(char *str)
-{
-	write(1, str, ft_strlen(str));
-}
-
-void	ft_putnbr_l(unsigned long n)
-{
-	char tmp[2];
-	
-	tmp[1] = 0;
-	if (n >= 10)
-	{
-		ft_putnbr_l(n / 10);
-		tmp[0] = n % 10 + '0';
-	}
-	else
-		tmp[0] = n + '0';
-	ft_putstr(tmp);
-}
-
-
-void	ft_putunbr(unsigned int n)
-{
-	char tmp[2];
-	tmp[1] = 0;
-
-	if (n >= 10)
-	{
-		ft_putunbr(n / 10);
-		tmp[0] = n % 10 + '0';
-		ft_putstr(tmp);
-	}
-	else
-	{
-		tmp[0] = n + '0';
-		ft_putstr(tmp);
-	}
-}
-
-void	ft_putnbr(int n)
-{
-	char tmp[2];
-	tmp[1] = 0;
-	if (n < 0)
-	{
-		printf("NEG VALUE : %d\n",n);
-	}
-	else if (n >= 10)
-	{
-		ft_putnbr(n / 10);
-		tmp[0] = n % 10 + '0';
-		ft_putstr(tmp);
-	}
-	else
-	{
-		tmp[0] = n + '0';
-		ft_putstr(tmp);
-	}
 }
