@@ -52,5 +52,6 @@ Mkfile.old
 dkms.conf
 
 philo_one
+philo_two
 */obj
 *.o
