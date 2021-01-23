@@ -11,7 +11,7 @@ SRC 		= 	routine.c \
 				utils.c
 
 
-CFLAGS		=	-g3 -fsanitize=address -Wall -Wextra -Werror
+CFLAGS		=	-g3 -fsanitize=address -Wall -Wextra #-Werror
 CC			=	clang
 
 all : $(NAME)

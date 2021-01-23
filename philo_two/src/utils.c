@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:36:43 by edal              #+#    #+#             */
-/*   Updated: 2021/01/17 16:05:54 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/01/23 14:09:16 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,10 @@
 int		init_contr(t_contr *contr, char **argv, int argc)
 {
 	int i;
+	char buff[20];
+
+	buff[0] = 'F';
+	buff[2] = 0;
 
 	i = 0;
 	contr->nbr_of_philo = ft_atoi(argv[1]);
@@ -30,7 +34,11 @@ int		init_contr(t_contr *contr, char **argv, int argc)
 		return (1);
 	while (i < contr->nbr_of_philo)
 	{
-		contr->forks[i++] = sem_open("FORKS", O_CREAT, 644);
+		buff[1] = i + '0';
+		// printf("creating sem %s\n",buff );
+		sem_unlink(buff);
+		contr->forks[i] = sem_open(buff, O_CREAT, 0644, 1);
+		i++;
 	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 18:34:51 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/01/17 16:08:30 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/01/23 14:36:34 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,5 +59,6 @@ int					ft_atoi(const char *in);
 int					ft_strlen(char *str);
 char				*ft_itoa(unsigned long n);
 size_t				ft_strlcat(char *dst, char *src, size_t size);
+
 
 #endif
