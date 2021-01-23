@@ -6,20 +6,19 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:36:43 by edal              #+#    #+#             */
-/*   Updated: 2021/01/23 14:09:16 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/01/23 16:11:50 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo1.h"
+#include "philo_two.h"
 
 int		init_contr(t_contr *contr, char **argv, int argc)
 {
-	int i;
-	char buff[20];
+	int		i;
+	char	buff[20];
 
 	buff[0] = 'F';
 	buff[2] = 0;
-
 	i = 0;
 	contr->nbr_of_philo = ft_atoi(argv[1]);
 	contr->time_to_die = ft_atoi(argv[2]);
@@ -35,7 +34,6 @@ int		init_contr(t_contr *contr, char **argv, int argc)
 	while (i < contr->nbr_of_philo)
 	{
 		buff[1] = i + '0';
-		// printf("creating sem %s\n",buff );
 		sem_unlink(buff);
 		contr->forks[i] = sem_open(buff, O_CREAT, 0644, 1);
 		i++;

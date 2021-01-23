@@ -7,11 +7,11 @@ OBJS		=	$(OBJ:%=$(OBJD)/%)
 
 SRC 		= 	routine.c \
 				extern.c \
-				philo1.c \
+				philo_two.c \
 				utils.c
 
 
-CFLAGS		=	-g3 -fsanitize=address -Wall -Wextra #-Werror
+CFLAGS		=	-g3 -fsanitize=address -Wall -Wextra -Werror
 CC			=	clang
 
 all : $(NAME)

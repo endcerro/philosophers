@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo1.c                                           :+:      :+:    :+:   */
+/*   philo_two.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:14:58 by edal              #+#    #+#             */
-/*   Updated: 2021/01/23 15:07:42 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/01/23 16:12:17 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo1.h"
+#include "philo_two.h"
 
 void	loop(t_philo *phil)
 {
@@ -37,42 +37,30 @@ void	loop(t_philo *phil)
 	return ;
 }
 
-void nclean(int nbr_of_philo, pthread_t **pid_tot)
+char	*modbuf(char *buff, int i)
 {
-	int i = 0;
-
-	while ( i < nbr_of_philo)
-	{
-		pthread_join(pid_tot[0][i], 0);
-		pthread_join(pid_tot[1][i], 0);
-		i++;
-	}
-	printf("DONE\n");
+	buff[0] = 'A';
+	buff[2] = 0;
+	buff[1] = '0' + i;
+	return (buff);
 }
-
 
 void	spawn_philos(t_contr *contr)
 {
 	int			i;
-	pthread_t 	pid_tot[2][contr->nbr_of_philo];
+	pthread_t	pid_tot[2][contr->nbr_of_philo];
 	t_philo		philos[contr->nbr_of_philo];
-	char 		buff[20];
-	
-	buff[0] = 'A';
-	buff[2] = 0;
+	char		buff[20];
+
 	i = -1;
 	gettimeofday(&(contr->start), 0);
 	while (++i < contr->nbr_of_philo)
 	{
 		philos[i].contr = contr;
 		philos[i].id = i;
-		buff[1] = i + '0';
-		
 		gettimeofday(&(philos[i].lmeal), 0);
-		
-
-		sem_unlink(buff);
-		philos[i].alive_l = sem_open(buff, O_CREAT, 0644, 1);
+		sem_unlink(modbuf(buff, i));
+		philos[i].alive_l = sem_open(modbuf(buff, i), O_CREAT, 0644, 1);
 		pthread_create(&(pid_tot[0][i]), 0, (void*)loop, (void*)&(philos[i]));
 		pthread_create(&(pid_tot[1][i]), 0, (void*)life, (void*)&(philos[i]));
 		usleep(50);
@@ -84,8 +72,6 @@ void	spawn_philos(t_contr *contr)
 		pthread_join(pid_tot[1][i], 0);
 		sem_close(philos[i].alive_l);
 	}
-
-
 }
 
 void	cleanup(t_contr *contr)
