@@ -6,11 +6,11 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/10 17:10:15 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/01/23 16:11:42 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/01/23 16:50:52 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo_two.h"
+#include "philo_three.h"
 
 int				ft_strlen(char *str)
 {

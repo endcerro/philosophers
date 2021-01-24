@@ -1,4 +1,4 @@
-NAME 		=	philo_two
+NAME 		=	philo_three
 DIRSRC 		=	src
 OBJD 		=	obj
 INCLUDE 	=	head
@@ -7,11 +7,11 @@ OBJS		=	$(OBJ:%=$(OBJD)/%)
 
 SRC 		= 	routine.c \
 				extern.c \
-				philo_two.c \
+				philo_three.c \
 				utils.c
 
 
-CFLAGS		=	-g3 -fsanitize=address -Wall -Wextra -Werror
+CFLAGS		=	-g3 -fsanitize=address -Wall -Wextra -Werror -pthread
 CC			=	clang
 
 all : $(NAME)

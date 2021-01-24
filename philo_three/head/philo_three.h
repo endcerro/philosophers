@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo_two.h                                        :+:      :+:    :+:   */
+/*   philo_three.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 18:34:51 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/01/23 16:11:36 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/01/24 17:09:45 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILO_TWO_H
-# define PHILO_TWO_H
+#ifndef PHILO_THREE_H
+# define PHILO_THREE_H
 
 # include <stdio.h>
 # include <string.h>
@@ -19,6 +19,7 @@
 # include <semaphore.h>
 # include <pthread.h>
 # include <stdlib.h>
+#include <signal.h>
 # include <unistd.h>
 
 # define FORK 0
@@ -34,7 +35,7 @@ typedef	struct		s_contr
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				must_eat;
-	int				did_eat;
+	sem_t			*did_eat;
 	char			end;
 	sem_t			**forks;
 	struct timeval	start;

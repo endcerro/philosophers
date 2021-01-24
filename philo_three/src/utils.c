@@ -6,11 +6,11 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:36:43 by edal              #+#    #+#             */
-/*   Updated: 2021/01/23 16:11:50 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/01/23 17:16:36 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo_two.h"
+#include "philo_three.h"
 
 int		init_contr(t_contr *contr, char **argv, int argc)
 {
@@ -26,7 +26,11 @@ int		init_contr(t_contr *contr, char **argv, int argc)
 	contr->time_to_sleep = ft_atoi(argv[4]);
 	contr->must_eat = -1;
 	contr->end = 0;
-	contr->did_eat = 0;
+	sem_unlink("did_eat");
+	contr->did_eat = sem_open("did_eat", O_CREAT, 0664, 1);
+	// sem_post(contr->did_eat);
+	// printf("AT FIRST %p\n", (contr->did_eat));
+	
 	if (argc == 6)
 		contr->must_eat = ft_atoi(argv[5]);
 	if (!(contr->forks = malloc(sizeof(sem_t *) * contr->nbr_of_philo)))
@@ -36,6 +40,7 @@ int		init_contr(t_contr *contr, char **argv, int argc)
 		buff[1] = i + '0';
 		sem_unlink(buff);
 		contr->forks[i] = sem_open(buff, O_CREAT, 0644, 1);
+		// printf("AT FIRST %d\n", *(contr->forks[i]));
 		i++;
 	}
 	return (0);
