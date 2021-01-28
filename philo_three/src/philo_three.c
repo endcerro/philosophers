@@ -6,27 +6,31 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:14:58 by edal              #+#    #+#             */
-/*   Updated: 2021/01/24 17:19:18 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/01/28 16:51:22 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_three.h"
 
-void	loop(t_philo *phil)
+int	loop(t_philo *phil)
 {
 	int cpt;
+
+	int testret;
 
 	phil->alive = 1;
 	cpt = 0;
 	sem_wait(phil->alive_l);
 	gettimeofday(&(phil->lmeal), 0);
 	sem_post(phil->alive_l);
+	testret = 0;
 	while (phil->alive && !phil->contr->end)
 	{
 		print_ts(phil, THINK);
 		eat(phil);
 		if (++cpt == phil->contr->must_eat)
 		{
+			testret = 0;
 			phil->contr->did_eat++;
 			phil->alive = 0;
 			break ;
@@ -34,7 +38,7 @@ void	loop(t_philo *phil)
 		print_ts(phil, SLEEP);
 		usleep(phil->contr->time_to_sleep * 1000);
 	}
-	return ;
+	return testret ;
 }
 
 char	*modbuf(char *buff, int i)
@@ -69,11 +73,11 @@ void	spawn_philos(t_contr *contr)
 		if (forkid[i] == 0)
 		{
 			pthread_create(&(pid_tot[1][i]), 0, (void*)life, (void*)&(philos[i]));
-			loop(&(philos[i]));
-			
+			int test = loop(&(philos[i]));
+			printf("TEST IS %d for %d\n",test, philos[i].id );
 			// if (i == 3)
-			// 	return;
-			exit(1);
+				return;
+			// exit(1);
 
 			// return;
 			

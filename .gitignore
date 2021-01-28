@@ -53,8 +53,8 @@ dkms.conf
 
 *DS_Store*
 
-philo_one
-philo_two
-philo_tree
+*_one/philo_one
+*_two/philo_two
+*_three/philo_three
 */obj
 *.o
