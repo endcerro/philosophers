@@ -1,6 +1,7 @@
 # include <stdio.h>
 # include <string.h>
 # include <sys/time.h>
+#include <signal.h>
 # include <semaphore.h>
 # include <pthread.h>
 # include <stdlib.h>
@@ -13,22 +14,27 @@ typedef struct test
 	sem_t **sems;	
 } m_test;
 
-void loop(m_test *test)
+int loop(m_test *test, int id)
 {
 	int i = 0;
-	printf("WELCOME TO LOOP\n");
-	while (++i < 10)
+	// printf("WELCOME TO LOOP\	n");
+	while (++i < 100 * id)
 	{
 		sem_wait(test->sems[0]);
 		sem_wait(test->sems[1]);
-		printf("GOT BOTH\n");
+		// printf("GOT BOTH\n");
 		// printf("VALUES ARE %d %d\n", (test->sems[1]), (test->sems[0]) );
 		usleep(5000);
 		sem_post(test->sems[0]);
 		sem_post(test->sems[1]);
-		printf("DROPPED BOTH\n");
+		// printf("DROPPED BOTH\n");
+		printf("%d %d\n",id, i );
 	}
 	printf("I AM DONE\n");
+	if ( id == 1)
+		return 0;
+	else 
+		exit(1);
 }
 
 int main()
@@ -44,20 +50,57 @@ int main()
 
 	pid_t f1;
 	pid_t f2;
+	pid_t f3;
+	pid_t f4;
 
 	if ((f1 = fork()) == 0)
 	{
-		loop(&test);
+		loop(&test, 1);
 	}
 	else if ((f2 = fork()) == 0)
 	{
-		loop(&test);
+		loop(&test, 2);
+	}
+	else if ((f3 = fork()) == 0)
+	{
+		loop(&test, 3);
+	}
+	else if ((f4 = fork()) == 0)
+	{
+		loop(&test, 4);
 	}
 	else
 	{
-		waitpid(f1, (int *)WUNTRACED, 0);
-		waitpid(f2, (int *)WUNTRACED, 0);
-		printf("BOTH DONE\n");
+		int ret = -50;
+		int run = 4;
+		while (run)
+		{
+			pid_t status = waitpid(-1, &ret, WUNTRACED);	
+			// if (status == 0)
+				// printf("NOTHING RETURNED\n");
+			if (status != 0)
+			{
+				// if(WIFEXITED(ret))
+				// 	printf("EXIT\n");
+				// else
+				// 	printf("RETURN\n");
+				// kill(f1, SIGKILL);
+				// kill(f2, SIGKILL);
+				kill(f1, SIGKILL);
+				kill(f2, SIGKILL);
+				kill(f3, SIGKILL);
+				kill(f4, SIGKILL);
+				run--;
+				printf("pid :%d ret:%d \n",status, ret);
+			}
+		
+		}
+		// int ret;
+		// waitpid(0, &ret, WUNTRACED);
+		// printf("%d finished first\n",ret );
+		// waitpid(0, &ret, WUNTRACED);
+		// printf("%d finished second\n",ret );
+		// printf("BOTH DONE\n");
 	}
 
 

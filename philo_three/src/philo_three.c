@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:14:58 by edal              #+#    #+#             */
-/*   Updated: 2021/01/28 16:51:22 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/01/29 17:07:02 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,13 @@ int	loop(t_philo *phil)
 		{
 			testret = 0;
 			phil->contr->did_eat++;
-			phil->alive = 0;
+			// phil->alive = 0;
 			break ;
 		}
 		print_ts(phil, SLEEP);
 		usleep(phil->contr->time_to_sleep * 1000);
 	}
-	return testret ;
+	return phil->alive ;
 }
 
 char	*modbuf(char *buff, int i)
@@ -62,49 +62,55 @@ void	spawn_philos(t_contr *contr)
 
 	i = -1;
 	gettimeofday(&(contr->start), 0);
+	for (int j = 0; j < contr->nbr_of_philo; j++)
+	{
+		sem_unlink(modbuf(buff, i));
+	}
 	while (++i < contr->nbr_of_philo)
 	{
 		philos[i].contr = contr;
 		philos[i].id = i;
 		gettimeofday(&(philos[i].lmeal), 0);
-		sem_unlink(modbuf(buff, i));
-		philos[i].alive_l = sem_open(modbuf(buff, i), O_CREAT, 0644, 1);
+		philos[i].alive_l = sem_open(modbuf(buff, i), O_CREAT, 0644);
 		forkid[i] = fork();
-		if (forkid[i] == 0)
+
+
+		if (forkid[i] == 0) // THEY ARE SELF CONTAINED
 		{
 			pthread_create(&(pid_tot[1][i]), 0, (void*)life, (void*)&(philos[i]));
-			int test = loop(&(philos[i]));
-			printf("TEST IS %d for %d\n",test, philos[i].id );
-			// if (i == 3)
-				return;
-			// exit(1);
-
-			// return;
-			
+			int ret = loop(&(philos[i]));
+			if (ret == 0)
+				exit(1);
+			return;
 		}
-		// pthread_create(&(pid_tot[0][i]), 0, (void*)loop, (void*)&(philos[i]));
-		// pthread_create(&(pid_tot[1][i]), 0, (void*)life, (void*)&(philos[i]));
+
 		usleep(50);
 	}
-	i = -1;
-	while (++i < contr->nbr_of_philo)
+
+	waitpid(-1, 0, WUNTRACED);
+	kill(-1, SIGKILL);
+
+	i = 0;
+	pid_t status = 1;
+	while (status && i < contr->nbr_of_philo)
 	{
 		int ret = 0;
-		waitpid(0, &ret, WUNTRACED);
-		// printf("done waiting\n");
-		if (WEXITSTATUS(ret))
+		printf("waiting\n");
+		status = waitpid(-1, &ret, WUNTRACED);
+		printf("done waiting\n");
+		if (status != 0)
 		{
-			// printf("FOUND SOMETHING TO KILL");
-			for (int j = 0; j < contr->nbr_of_philo; j++)
-			{
-				kill(forkid[j], SIGKILL);
-			}
-			//Murder the other forks
+			printf("END OF THE ROAD\n");
+			kill(0, SIGKILL);
+			break;
 		}
-		// pthread_join(pid_tot[0][i], 0);
-		// pthread_join(pid_tot[1][i], 0);
-		// sem_close(philos[i].alive_l);
 	}
+	if (status > 0)
+		for (int j = 0; j < contr->nbr_of_philo; j++)
+		{	
+			kill(forkid[j], SIGKILL);
+			printf("KILL %d", j);
+		}
 }
 
 void	cleanup(t_contr *contr)
