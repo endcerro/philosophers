@@ -78,7 +78,7 @@ int main()
 			pid_t status = waitpid(-1, &ret, WUNTRACED);	
 			// if (status == 0)
 				// printf("NOTHING RETURNED\n");
-			if (status != 0)
+			if (status != 0 && ret != 0)
 			{
 				// if(WIFEXITED(ret))
 				// 	printf("EXIT\n");
