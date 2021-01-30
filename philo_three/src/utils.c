@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:36:43 by edal              #+#    #+#             */
-/*   Updated: 2021/01/23 17:16:36 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/01/30 15:28:39 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ int		init_contr(t_contr *contr, char **argv, int argc)
 
 void	print_ac(char *buff, int action)
 {
+
 	if (action == FORK)
 		ft_strlcat(buff, " has taken a fork\n", 1000);
 	else if (action == EAT)
@@ -83,7 +84,13 @@ void	print_ts(t_philo *phil, int action)
 	free(tmp);
 	if (phil->alive == 0 || phil->contr->end)
 		return ;
+	// sem_wait(phil->contr->done);
+	// sem_wait(phil->contr->done);
+	// sem_wait(phil->contr->done);
+	sem_wait(phil->contr->done);
 	print_ac(buff, action);
+	if (action != DIE)
+		sem_post(phil->contr->done);
 }
 
 int		ft_atoi(const char *in)

@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:14:58 by edal              #+#    #+#             */
-/*   Updated: 2021/01/29 17:07:02 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/01/30 15:39:22 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	loop(t_philo *phil)
 		{
 			testret = 0;
 			phil->contr->did_eat++;
-			// phil->alive = 0;
+			phil->alive = 0;
 			break ;
 		}
 		print_ts(phil, SLEEP);
@@ -52,65 +52,69 @@ char	*modbuf(char *buff, int i)
 void	spawn_philos(t_contr *contr)
 {
 	int			i;
-	pthread_t	pid_tot[2][contr->nbr_of_philo];
 	t_philo		philos[contr->nbr_of_philo];
 	char		buff[20];
-
-
 	pid_t 		forkid[contr->nbr_of_philo];
 
 
 	i = -1;
-	gettimeofday(&(contr->start), 0);
-	for (int j = 0; j < contr->nbr_of_philo; j++)
-	{
-		sem_unlink(modbuf(buff, i));
-	}
 	while (++i < contr->nbr_of_philo)
 	{
 		philos[i].contr = contr;
 		philos[i].id = i;
-		gettimeofday(&(philos[i].lmeal), 0);
+		philos[i].alive = 1;
+		// gettimeofday(&(philos[i].lmeal), 0);
+		sem_unlink(modbuf(buff, i));
 		philos[i].alive_l = sem_open(modbuf(buff, i), O_CREAT, 0644);
+	}
+	gettimeofday(&(contr->start), 0);
+	sem_unlink("END");
+	contr->done = sem_open("END", O_CREAT, 0644, 1);
+	i = -1;
+
+	while (++i < contr->nbr_of_philo)
+	{
 		forkid[i] = fork();
-
-
-		if (forkid[i] == 0) // THEY ARE SELF CONTAINED
+		if (forkid[i] == 0)
 		{
-			pthread_create(&(pid_tot[1][i]), 0, (void*)life, (void*)&(philos[i]));
-			int ret = loop(&(philos[i]));
-			if (ret == 0)
-				exit(1);
+			pthread_t tmp;
+			pthread_create(&tmp, 0, (void*)life, (void*)&(philos[i]));
+			loop(&philos[i]);
+			// for (int t = 0; t < 100 * (1 + i); t++)
+			// {
+			// 	if ( t % 10 == 0)
+			// 		printf("loop %d\n",i);
+			// 	usleep(5000);
+			// }
+			// printf("done loop\n");
+			// pthread_create(&(pid_tot[1][i]), 0, (void*)life, (void*)&(philos[i]));
+			// int ret = loop(&(philos[i]));
+			// if (ret == 0)
+				// exit(1);
 			return;
 		}
-
-		usleep(50);
+		// else
+			// printf("phil %d is %d\n", i, forkid[i]);
 	}
-
-	waitpid(-1, 0, WUNTRACED);
-	kill(-1, SIGKILL);
-
 	i = 0;
-	pid_t status = 1;
-	while (status && i < contr->nbr_of_philo)
-	{
-		int ret = 0;
-		printf("waiting\n");
-		status = waitpid(-1, &ret, WUNTRACED);
-		printf("done waiting\n");
-		if (status != 0)
-		{
-			printf("END OF THE ROAD\n");
-			kill(0, SIGKILL);
-			break;
-		}
-	}
-	if (status > 0)
-		for (int j = 0; j < contr->nbr_of_philo; j++)
-		{	
-			kill(forkid[j], SIGKILL);
-			printf("KILL %d", j);
-		}
+	// while ( ++i < contr->nbr_of_philo)
+	// {
+		// printf("waiting fork\n");
+		
+		waitpid(0, 0, 0);
+		kill(0, SIGINT);
+		// for ( int z= 0; z < contr->nbr_of_philo; z++)
+		// {
+				
+		// }
+		// printf("done waiting ret = %d\n",ret);
+		// printf("KILL TINE\n");
+		// kill(forkid[0], SIGKILL);
+		// kill(forkid[1], SIGKILL);
+		// kill(forkid[2], SIGKILL);
+		// printf("should be dead %d %d\n",i, forkid[i]);
+	// }
+		// usleep(5000000);
 }
 
 void	cleanup(t_contr *contr)
