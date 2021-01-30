@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 18:34:51 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/01/30 16:30:06 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/01/30 16:31:38 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <string.h>
 # include <sys/time.h>
 # include <sys/types.h>
+# include <fcntl.h>
 # include <semaphore.h>
 # include <pthread.h>
 # include <stdlib.h>
