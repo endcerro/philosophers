@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 18:34:51 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/01/30 15:20:36 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/01/30 16:27:03 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ typedef	struct		s_contr
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				must_eat;
-	sem_t			*did_eat;
+	// sem_t			*did_eat;
 	sem_t 			*done;
 	char			end;
 	sem_t			**forks;

@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:14:58 by edal              #+#    #+#             */
-/*   Updated: 2021/01/30 16:07:45 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/01/30 16:28:31 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ void	spawn_philos(t_contr *contr)
 				// exit(1);
 			// while(1)
 			// 	usleep(20);
+			free(contr->forks);
 			return;
 		}
 		// else
@@ -107,11 +108,26 @@ void	spawn_philos(t_contr *contr)
 		waitpid(0, &ret, WUNTRACED);
 
 		
-		
+		// free(contr->forks);
 		for ( int z= 0; z < contr->nbr_of_philo; z++)
 		{
-			kill(forkid[z], SIGINT);	
+			
+			kill(forkid[z], SIGINT);
+			// sem_close(philos[z].alive_l);
+			// sem_close(contr->forks[z]);
+
 		}
+		for ( int z= 0; z < contr->nbr_of_philo; z++)
+		{
+			
+			// kill(forkid[z], SIGINT);
+			sem_close(philos[z].alive_l);
+			sem_close(contr->forks[z]);
+
+		}
+
+		sem_close(contr->done);
+		free(contr->forks);
 		printf("I KILLED THEM\n");
 		// printf("done waiting ret = %d\n",ret);
 		// printf("KILL TINE\n");
