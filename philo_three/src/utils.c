@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:36:43 by edal              #+#    #+#             */
-/*   Updated: 2021/01/30 15:49:56 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/01/30 16:52:15 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,7 @@ int		init_contr(t_contr *contr, char **argv, int argc)
 	contr->time_to_sleep = ft_atoi(argv[4]);
 	contr->must_eat = -1;
 	contr->end = 0;
-	// sem_unlink("did_eat");
-	// contr->did_eat = sem_open("did_eat", O_CREAT, 0664, 1);
-	// sem_post(contr->did_eat);
-	// printf("AT FIRST %p\n", (contr->did_eat));
+
 	
 	if (argc == 6)
 		contr->must_eat = ft_atoi(argv[5]);
@@ -40,7 +37,6 @@ int		init_contr(t_contr *contr, char **argv, int argc)
 		buff[1] = i + '0';
 		sem_unlink(buff);
 		contr->forks[i] = sem_open(buff, O_CREAT, 0644, 1);
-		// printf("AT FIRST %d\n", *(contr->forks[i]));
 		i++;
 	}
 	return (0);
@@ -84,9 +80,6 @@ void	print_ts(t_philo *phil, int action)
 	free(tmp);
 	if (phil->alive == 0 || phil->contr->end)
 		return ;
-	// sem_wait(phil->contr->done);
-	// sem_wait(phil->contr->done);
-	// sem_wait(phil->contr->done);
 	sem_wait(phil->contr->done);
 	print_ac(buff, action);
 	if (action != DIE)

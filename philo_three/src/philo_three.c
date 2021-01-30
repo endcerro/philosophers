@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:14:58 by edal              #+#    #+#             */
-/*   Updated: 2021/01/30 16:28:31 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/01/30 17:13:47 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,18 @@ char	*modbuf(char *buff, int i)
 	buff[2] = 0;
 	buff[1] = '0' + i;
 	return (buff);
+}
+
+void cleanthatshitup(t_contr *contr, t_philo *philos)
+{
+	for ( int z= 0; z < contr->nbr_of_philo; z++)
+	{
+		sem_close(philos[z].alive_l);
+		sem_close(contr->forks[z]);
+	}
+
+	sem_close(contr->done);
+	free(contr->forks);
 }
 
 void	spawn_philos(t_contr *contr)
@@ -94,7 +106,9 @@ void	spawn_philos(t_contr *contr)
 				// exit(1);
 			// while(1)
 			// 	usleep(20);
-			free(contr->forks);
+			cleanthatshitup(contr, philos);
+			// free(contr->forks);
+			printf("THIS ONE IS DONE\n");
 			return;
 		}
 		// else
@@ -105,7 +119,18 @@ void	spawn_philos(t_contr *contr)
 	// {
 		// printf("waiting fork\n");
 		int ret;
-		waitpid(0, &ret, WUNTRACED);
+
+		int test = 0;
+		// for (int w = 0; w < contr->nbr_of_philo; w++)
+		while (test == 0)
+		{
+			test = waitpid(0, &ret, WNOHANG);
+			if (test)
+				printf("waited one %d\n",test);
+			else
+				printf("nope =\n");
+		}
+		// waitpid(0, &ret, WUNTRACED);
 
 		
 		// free(contr->forks);
@@ -117,17 +142,18 @@ void	spawn_philos(t_contr *contr)
 			// sem_close(contr->forks[z]);
 
 		}
-		for ( int z= 0; z < contr->nbr_of_philo; z++)
-		{
+		cleanthatshitup(contr, philos);
+		// for ( int z= 0; z < contr->nbr_of_philo; z++)
+		// {
 			
-			// kill(forkid[z], SIGINT);
-			sem_close(philos[z].alive_l);
-			sem_close(contr->forks[z]);
+		// 	// kill(forkid[z], SIGINT);
+		// 	sem_close(philos[z].alive_l);
+		// 	sem_close(contr->forks[z]);
 
-		}
+		// }
 
-		sem_close(contr->done);
-		free(contr->forks);
+		// sem_close(contr->done);
+		// free(contr->forks);
 		printf("I KILLED THEM\n");
 		// printf("done waiting ret = %d\n",ret);
 		// printf("KILL TINE\n");
