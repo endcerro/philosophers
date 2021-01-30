@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:14:58 by edal              #+#    #+#             */
-/*   Updated: 2021/01/30 15:39:22 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/01/30 16:07:45 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,9 @@ int	loop(t_philo *phil)
 		eat(phil);
 		if (++cpt == phil->contr->must_eat)
 		{
+			// printf("WE ARE HERE %d %d\n", phil->contr->did_eat, phil->alive);
 			testret = 0;
-			phil->contr->did_eat++;
+			// phil->contr->did_eat++;
 			phil->alive = 0;
 			break ;
 		}
@@ -65,7 +66,7 @@ void	spawn_philos(t_contr *contr)
 		philos[i].alive = 1;
 		// gettimeofday(&(philos[i].lmeal), 0);
 		sem_unlink(modbuf(buff, i));
-		philos[i].alive_l = sem_open(modbuf(buff, i), O_CREAT, 0644);
+		philos[i].alive_l = sem_open(modbuf(buff, i), O_CREAT, 0644, 1);
 	}
 	gettimeofday(&(contr->start), 0);
 	sem_unlink("END");
@@ -91,6 +92,8 @@ void	spawn_philos(t_contr *contr)
 			// int ret = loop(&(philos[i]));
 			// if (ret == 0)
 				// exit(1);
+			// while(1)
+			// 	usleep(20);
 			return;
 		}
 		// else
@@ -100,21 +103,26 @@ void	spawn_philos(t_contr *contr)
 	// while ( ++i < contr->nbr_of_philo)
 	// {
 		// printf("waiting fork\n");
+		int ret;
+		waitpid(0, &ret, WUNTRACED);
+
 		
-		waitpid(0, 0, 0);
-		kill(0, SIGINT);
-		// for ( int z= 0; z < contr->nbr_of_philo; z++)
-		// {
-				
-		// }
+		
+		for ( int z= 0; z < contr->nbr_of_philo; z++)
+		{
+			kill(forkid[z], SIGINT);	
+		}
+		printf("I KILLED THEM\n");
 		// printf("done waiting ret = %d\n",ret);
 		// printf("KILL TINE\n");
 		// kill(forkid[0], SIGKILL);
 		// kill(forkid[1], SIGKILL);
 		// kill(forkid[2], SIGKILL);
 		// printf("should be dead %d %d\n",i, forkid[i]);
-	// }
+	// }whi
 		// usleep(5000000);
+		// while (1)
+		// 	usleep(50);
 }
 
 void	cleanup(t_contr *contr)

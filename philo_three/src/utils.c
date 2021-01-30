@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:36:43 by edal              #+#    #+#             */
-/*   Updated: 2021/01/30 15:28:39 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/01/30 15:49:56 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ int		init_contr(t_contr *contr, char **argv, int argc)
 	contr->time_to_sleep = ft_atoi(argv[4]);
 	contr->must_eat = -1;
 	contr->end = 0;
-	sem_unlink("did_eat");
-	contr->did_eat = sem_open("did_eat", O_CREAT, 0664, 1);
+	// sem_unlink("did_eat");
+	// contr->did_eat = sem_open("did_eat", O_CREAT, 0664, 1);
 	// sem_post(contr->did_eat);
 	// printf("AT FIRST %p\n", (contr->did_eat));
 	
