@@ -6,28 +6,28 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:36:43 by edal              #+#    #+#             */
-/*   Updated: 2021/01/30 16:52:15 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/03 15:50:38 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_three.h"
 
-int		init_contr(t_contr *contr, char **argv, int argc)
+int		init_contr(char **argv, int argc)
 {
 	int		i;
 	char	buff[20];
 
 	buff[0] = 'F';
 	buff[2] = 0;
-	i = 0;
+
 	contr->nbr_of_philo = ft_atoi(argv[1]);
 	contr->time_to_die = ft_atoi(argv[2]);
 	contr->time_to_eat = ft_atoi(argv[3]);
 	contr->time_to_sleep = ft_atoi(argv[4]);
 	contr->must_eat = -1;
-	contr->end = 0;
-
-	
+	contr->end = i = 0;
+	sem_unlink("END");
+	contr->done = sem_open("END", O_CREAT, 0644, 1);	
 	if (argc == 6)
 		contr->must_eat = ft_atoi(argv[5]);
 	if (!(contr->forks = malloc(sizeof(sem_t *) * contr->nbr_of_philo)))
@@ -68,7 +68,7 @@ void	print_ts(t_philo *phil, int action)
 	gettimeofday(&delta, 0);
 	ms = delta.tv_sec * 1000000;
 	ms += delta.tv_usec;
-	ms -= phil->contr->start.tv_sec * 1000000 + phil->contr->start.tv_usec;
+	ms -= contr->start.tv_sec * 1000000 + contr->start.tv_usec;
 	ms = ms / 1000;
 	buff[0] = 0;
 	tmp = ft_itoa(ms);
@@ -78,12 +78,12 @@ void	print_ts(t_philo *phil, int action)
 	tmp = ft_itoa((unsigned long)phil->id + 1);
 	ft_strlcat(buff, tmp, 1000);
 	free(tmp);
-	if (phil->alive == 0 || phil->contr->end)
+	if (phil->alive == 0 || contr->end)
 		return ;
-	sem_wait(phil->contr->done);
+	sem_wait(contr->done);
 	print_ac(buff, action);
 	if (action != DIE)
-		sem_post(phil->contr->done);
+		sem_post(contr->done);
 }
 
 int		ft_atoi(const char *in)

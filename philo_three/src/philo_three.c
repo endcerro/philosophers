@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:14:58 by edal              #+#    #+#             */
-/*   Updated: 2021/01/30 17:13:47 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/03 16:11:06 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,23 +23,21 @@ int	loop(t_philo *phil)
 	sem_wait(phil->alive_l);
 	gettimeofday(&(phil->lmeal), 0);
 	sem_post(phil->alive_l);
-	testret = 0;
-	while (phil->alive && !phil->contr->end)
+	testret = 1;
+	while (phil->alive && !contr->end)
 	{
 		print_ts(phil, THINK);
 		eat(phil);
-		if (++cpt == phil->contr->must_eat)
+		if (++cpt == contr->must_eat)
 		{
-			// printf("WE ARE HERE %d %d\n", phil->contr->did_eat, phil->alive);
 			testret = 0;
-			// phil->contr->did_eat++;
 			phil->alive = 0;
-			break ;
+			return (1);
 		}
 		print_ts(phil, SLEEP);
-		usleep(phil->contr->time_to_sleep * 1000);
+		usleep(contr->time_to_sleep * 1000);
 	}
-	return phil->alive ;
+	return (2);
 }
 
 char	*modbuf(char *buff, int i)
@@ -50,131 +48,78 @@ char	*modbuf(char *buff, int i)
 	return (buff);
 }
 
-void cleanthatshitup(t_contr *contr, t_philo *philos)
+void cleanthatshitup(t_contr *contr)
 {
-	for ( int z= 0; z < contr->nbr_of_philo; z++)
-	{
-		sem_close(philos[z].alive_l);
-		sem_close(contr->forks[z]);
-	}
-
-	sem_close(contr->done);
 	free(contr->forks);
 }
 
-void	spawn_philos(t_contr *contr)
+void cleanforks()
+{
+	int 	i;
+	char	buff[20];
+
+	buff[0] = 'F';
+	buff[2] = 0;
+	i = 0;
+	while (i < contr->nbr_of_philo)
+	{
+		buff[1] = i + '0';
+		sem_unlink(buff);
+		contr->forks[i] = sem_open(buff, O_CREAT, 0644, 1);
+		i++;
+	}
+}
+
+t_philo gphil(int i, char *buff)
+{
+	t_philo philo;
+
+	philo.id = i;
+	philo.alive = 1;
+	sem_unlink(modbuf(buff, i));
+	philo.alive_l = sem_open(modbuf(buff, i), O_CREAT, 0644, 1);
+
+	return (philo);
+}
+
+
+void	spawn_philos()
 {
 	int			i;
-	t_philo		philos[contr->nbr_of_philo];
+	t_philo		philo;
 	char		buff[20];
 	pid_t 		forkid[contr->nbr_of_philo];
+	pthread_t 	tmp;
+	int 		ret;
+	int 		j;
 
-
-	i = -1;
-	while (++i < contr->nbr_of_philo)
-	{
-		philos[i].contr = contr;
-		philos[i].id = i;
-		philos[i].alive = 1;
-		// gettimeofday(&(philos[i].lmeal), 0);
-		sem_unlink(modbuf(buff, i));
-		philos[i].alive_l = sem_open(modbuf(buff, i), O_CREAT, 0644, 1);
-	}
+	j = 0;
+	i = ret =-1;
+	buff[0] = 0;
 	gettimeofday(&(contr->start), 0);
-	sem_unlink("END");
-	contr->done = sem_open("END", O_CREAT, 0644, 1);
-	i = -1;
-
 	while (++i < contr->nbr_of_philo)
 	{
+		philo = gphil(i, buff);
 		forkid[i] = fork();
 		if (forkid[i] == 0)
 		{
-			pthread_t tmp;
-			pthread_create(&tmp, 0, (void*)life, (void*)&(philos[i]));
-			loop(&philos[i]);
-			// for (int t = 0; t < 100 * (1 + i); t++)
-			// {
-			// 	if ( t % 10 == 0)
-			// 		printf("loop %d\n",i);
-			// 	usleep(5000);
-			// }
-			// printf("done loop\n");
-			// pthread_create(&(pid_tot[1][i]), 0, (void*)life, (void*)&(philos[i]));
-			// int ret = loop(&(philos[i]));
-			// if (ret == 0)
-				// exit(1);
-			// while(1)
-			// 	usleep(20);
-			cleanthatshitup(contr, philos);
-			// free(contr->forks);
-			printf("THIS ONE IS DONE\n");
-			return;
+			pthread_create(&tmp, 0, (void*)life, (void*)&(philo));
+			exit (loop(&philo));
 		}
-		// else
-			// printf("phil %d is %d\n", i, forkid[i]);
 	}
-	i = 0;
-	// while ( ++i < contr->nbr_of_philo)
-	// {
-		// printf("waiting fork\n");
-		int ret;
+	i = -1;
 
-		int test = 0;
-		// for (int w = 0; w < contr->nbr_of_philo; w++)
-		while (test == 0)
-		{
-			test = waitpid(0, &ret, WNOHANG);
-			if (test)
-				printf("waited one %d\n",test);
-			else
-				printf("nope =\n");
-		}
-		// waitpid(0, &ret, WUNTRACED);
-
-		
-		// free(contr->forks);
-		for ( int z= 0; z < contr->nbr_of_philo; z++)
-		{
-			
-			kill(forkid[z], SIGINT);
-			// sem_close(philos[z].alive_l);
-			// sem_close(contr->forks[z]);
-
-		}
-		cleanthatshitup(contr, philos);
-		// for ( int z= 0; z < contr->nbr_of_philo; z++)
-		// {
-			
-		// 	// kill(forkid[z], SIGINT);
-		// 	sem_close(philos[z].alive_l);
-		// 	sem_close(contr->forks[z]);
-
-		// }
-
-		// sem_close(contr->done);
-		// free(contr->forks);
-		printf("I KILLED THEM\n");
-		// printf("done waiting ret = %d\n",ret);
-		// printf("KILL TINE\n");
-		// kill(forkid[0], SIGKILL);
-		// kill(forkid[1], SIGKILL);
-		// kill(forkid[2], SIGKILL);
-		// printf("should be dead %d %d\n",i, forkid[i]);
-	// }whi
-		// usleep(5000000);
-		// while (1)
-		// 	usleep(50);
-}
-
-void	cleanup(t_contr *contr)
-{
-	int i;
-
-	i = 0;
-	while (i < contr->nbr_of_philo)
-		sem_close(contr->forks[i++]);
-	free(contr->forks);
+	while (ret != 512 && j < contr->nbr_of_philo)
+	{
+		waitpid(0, &ret, WUNTRACED);
+		j++;
+	}
+	if (ret == 512)
+		while (++i < contr->nbr_of_philo)
+			kill(forkid[i], SIGINT);
+	else
+		write(1, "All philos ate as supposed\n", 27);
+	cleanthatshitup(contr);
 }
 
 int		main(int argc, char **argv)
@@ -188,14 +133,8 @@ int		main(int argc, char **argv)
 		return (0);
 	}
 	contr = &contrn;
-	if (init_contr(contr, argv, argc))
+	if (init_contr(argv, argc))
 		return (1);
-	spawn_philos(&contrn);
-
-	// printf("THEY ATE %d\n", *(contr->did_eat));
-
-	// if (*(contr->did_eat) == contr->nbr_of_philo)
-	// 	write(1, "All philos ate as supposed\n", 27);
-	// cleanup(&contrn);
+	spawn_philos();
 	return (0);
 }

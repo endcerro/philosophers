@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 18:34:51 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/01/30 16:32:26 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/03 15:51:03 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,10 @@ typedef	struct		s_philo
 	int				alive;
 	struct timeval	lmeal;
 	sem_t			*alive_l;
-	t_contr			*contr;
 }					t_philo;
 
 struct s_contr		*contr;
-int					init_contr(t_contr *contr, char **argv, int argc);
+int					init_contr(char **argv, int argc);
 void				print_ts(t_philo *phil, int action);
 void				life(t_philo *phil);
 int					eat(t_philo *phil);
