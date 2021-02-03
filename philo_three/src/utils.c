@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:36:43 by edal              #+#    #+#             */
-/*   Updated: 2021/02/03 15:50:38 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/03 16:33:20 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,15 @@ int		init_contr(char **argv, int argc)
 
 	buff[0] = 'F';
 	buff[2] = 0;
-
 	contr->nbr_of_philo = ft_atoi(argv[1]);
 	contr->time_to_die = ft_atoi(argv[2]);
 	contr->time_to_eat = ft_atoi(argv[3]);
 	contr->time_to_sleep = ft_atoi(argv[4]);
 	contr->must_eat = -1;
-	contr->end = i = 0;
+	contr->end = 0;
+	i = 0;
 	sem_unlink("END");
-	contr->done = sem_open("END", O_CREAT, 0644, 1);	
+	contr->done = sem_open("END", O_CREAT, 0644, 1);
 	if (argc == 6)
 		contr->must_eat = ft_atoi(argv[5]);
 	if (!(contr->forks = malloc(sizeof(sem_t *) * contr->nbr_of_philo)))
@@ -36,15 +36,13 @@ int		init_contr(char **argv, int argc)
 	{
 		buff[1] = i + '0';
 		sem_unlink(buff);
-		contr->forks[i] = sem_open(buff, O_CREAT, 0644, 1);
-		i++;
+		contr->forks[i++] = sem_open(buff, O_CREAT, 0644, 1);
 	}
 	return (0);
 }
 
 void	print_ac(char *buff, int action)
 {
-
 	if (action == FORK)
 		ft_strlcat(buff, " has taken a fork\n", 1000);
 	else if (action == EAT)
@@ -69,7 +67,7 @@ void	print_ts(t_philo *phil, int action)
 	ms = delta.tv_sec * 1000000;
 	ms += delta.tv_usec;
 	ms -= contr->start.tv_sec * 1000000 + contr->start.tv_usec;
-	ms = ms / 1000;
+	ms /= 1000;
 	buff[0] = 0;
 	tmp = ft_itoa(ms);
 	ft_strlcat(buff, tmp, 1000);
