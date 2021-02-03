@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo1.h                                           :+:      :+:    :+:   */
+/*   philo_one.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 18:34:51 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/01/10 18:40:46 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/03 16:58:12 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ typedef	struct		s_philo
 	t_contr			*contr;
 }					t_philo;
 struct s_contr		*contr;
-int					init_contr(t_contr *contr, char **argv, int argc);
+int					init_contr(char **argv, int argc);
 void				print_ts(t_philo *phil, int action);
 void				life(t_philo *phil);
 int					eat(t_philo *phil);

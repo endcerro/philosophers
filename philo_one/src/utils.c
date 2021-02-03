@@ -6,13 +6,13 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:36:43 by edal              #+#    #+#             */
-/*   Updated: 2021/01/10 18:41:13 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/03 16:57:24 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo1.h"
+#include "philo_one.h"
 
-int		init_contr(t_contr *contr, char **argv, int argc)
+int		init_contr(char **argv, int argc)
 {
 	int i;
 

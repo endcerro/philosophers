@@ -7,7 +7,7 @@ OBJS		=	$(OBJ:%=$(OBJD)/%)
 
 SRC 		= 	routine.c \
 				extern.c \
-				philo1.c \
+				philo_one.c \
 				utils.c
 
 
