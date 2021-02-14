@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:14:58 by edal              #+#    #+#             */
-/*   Updated: 2021/02/03 16:31:05 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/14 17:21:17 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,10 @@ int			loop(t_philo *phil)
 
 	phil->alive = 1;
 	cpt = 0;
-	sem_wait(phil->alive_l);
-	gettimeofday(&(phil->lmeal), 0);
-	sem_post(phil->alive_l);
+	
+	// sem_wait(phil->alive_l);
+	// gettimeofday(&(phil->lmeal), 0);
+	// sem_post(phil->alive_l);
 	ret = 2;
 	while (phil->alive && !contr->end)
 	{
@@ -32,6 +33,7 @@ int			loop(t_philo *phil)
 		print_ts(phil, SLEEP);
 		usleep(contr->time_to_sleep * 1000);
 	}
+	free(phil->id_str);
 	free(contr->forks);
 	return (ret);
 }
@@ -52,6 +54,8 @@ t_philo		gphil(int i, char *buff)
 	philo.alive = 1;
 	sem_unlink(modbuf(buff, i));
 	philo.alive_l = sem_open(modbuf(buff, i), O_CREAT, 0644, 1);
+	philo.id_str = ft_itoa(philo.id + 1);
+	gettimeofday(&(philo.lmeal), 0);
 	return (philo);
 }
 

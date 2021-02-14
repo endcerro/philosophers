@@ -6,12 +6,12 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 18:34:51 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/03 16:58:12 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/06 12:59:26 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILO1_H
-# define PHILO1_H
+#ifndef PHILO_ONE_H
+# define PHILO_ONE_H
 
 # include <stdio.h>
 # include <string.h>

@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/10 16:59:10 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/03 15:51:20 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/14 17:13:09 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	life(t_philo *phil)
 	sem_post(phil->alive_l);
 	while (phil->alive)
 	{
-		usleep(10);
+		// usleep(10);
 		if (!check_alive(phil))
 			print_ts(phil, DIE);
 	}
@@ -33,14 +33,14 @@ int		eat(t_philo *phil)
 		contr->nbr_of_philo]));
 	print_ts(phil, FORK);
 	sem_wait((phil->alive_l));
-	gettimeofday(&(phil->lmeal), 0);
 	print_ts(phil, EAT);
-	usleep(contr->time_to_eat * 1000);
 	gettimeofday(&(phil->lmeal), 0);
+	usleep(contr->time_to_eat * 1000);
 	sem_post((phil->alive_l));
 	sem_post((contr->forks[phil->id]));
 	sem_post((contr->forks[(phil->id + 1) %
 		contr->nbr_of_philo]));
+	
 	return (0);
 }
 
@@ -55,6 +55,7 @@ int		check_alive(t_philo *phil)
 	t1 = phil->lmeal.tv_sec * 1000000;
 	t1 += phil->lmeal.tv_usec + contr->time_to_die * 1000;
 	t2 = time.tv_sec * 1000000 + time.tv_usec;
+	// printf("%lu, %lu\n", t1, t2);
 	if (t1 < t2)
 	{
 		print_ts(phil, DIE);

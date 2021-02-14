@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/10 16:59:10 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/03 16:54:06 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/14 17:00:49 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ int		eat(t_philo *phil)
 	print_ts(phil, FORK);
 	pthread_mutex_lock(&(phil->alive_l));
 	print_ts(phil, EAT);
-	usleep(phil->contr->time_to_eat * 1000);
 	gettimeofday(&(phil->lmeal), 0);
+	usleep(phil->contr->time_to_eat * 1000);
 	pthread_mutex_unlock(&(phil->alive_l));
 	pthread_mutex_unlock(&(phil->contr->forks[phil->id]));
 	pthread_mutex_unlock(&(phil->contr->forks[(phil->id + 1) %

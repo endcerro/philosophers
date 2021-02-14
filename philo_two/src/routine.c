@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/10 16:59:10 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/01/23 16:11:48 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/14 17:01:56 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ int		eat(t_philo *phil)
 	print_ts(phil, FORK);
 	sem_wait((phil->alive_l));
 	print_ts(phil, EAT);
-	usleep(phil->contr->time_to_eat * 1000);
 	gettimeofday(&(phil->lmeal), 0);
+	usleep(phil->contr->time_to_eat * 1000);
 	sem_post((phil->alive_l));
 	sem_post((phil->contr->forks[phil->id]));
 	sem_post((phil->contr->forks[(phil->id + 1) %
