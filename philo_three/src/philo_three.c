@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_three.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
+/*   By: edal <edal@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:14:58 by edal              #+#    #+#             */
-/*   Updated: 2021/02/14 17:21:17 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/15 18:29:39 by edal             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,10 +68,10 @@ void		spawn_philos(char *buff, int i, int ret)
 	gettimeofday(&(contr->start), 0);
 	while (++i < contr->nbr_of_philo)
 	{
-		philo = gphil(i, buff);
 		forkid[i] = fork();
 		if (forkid[i] == 0)
 		{
+			philo = gphil(i, buff);
 			pthread_create(&tmp, 0, (void*)life, (void*)&(philo));
 			exit(loop(&philo));
 		}
