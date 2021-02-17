@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
+/*   By: edal <edal@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/10 16:59:10 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/14 17:13:09 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/16 20:11:10 by edal             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,10 @@ int		eat(t_philo *phil)
 	print_ts(phil, EAT);
 	gettimeofday(&(phil->lmeal), 0);
 	usleep(contr->time_to_eat * 1000);
-	sem_post((phil->alive_l));
 	sem_post((contr->forks[phil->id]));
 	sem_post((contr->forks[(phil->id + 1) %
 		contr->nbr_of_philo]));
+	sem_post((phil->alive_l));
 	
 	return (0);
 }
@@ -59,9 +59,24 @@ int		check_alive(t_philo *phil)
 	if (t1 < t2)
 	{
 		print_ts(phil, DIE);
-		phil->alive = 0;
+		sem_wait(contr->done);
+		
 		contr->end = 1;
+		sem_post(contr->done);
+		// sem_wait(phil->alive_l);
+		phil->alive = 0;
+		// sem_post(phil->alive_l);
+		
+		
+		printf("OK WE DID DIE\n");
+
+		
+		
+		sem_post((phil->alive_l));
+		printf("RETURN TIME\n");
+		return (0);
 	}
 	sem_post((phil->alive_l));
+	// printf("IS DONE %d\n",phil->id );
 	return (phil->alive);
 }

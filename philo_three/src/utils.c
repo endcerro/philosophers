@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
+/*   By: edal <edal@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:36:43 by edal              #+#    #+#             */
-/*   Updated: 2021/02/06 13:46:00 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/16 20:15:04 by edal             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,12 +73,20 @@ void	print_ts(t_philo *phil, int action)
 	free(tmp);
 	ft_strlcat(buff, "ms ");
 	ft_strlcat(buff, phil->id_str);
-	if (phil->alive == 0 || contr->end)
-		return ;
+	
+	// sem_wait(phil->alive_l);
 	sem_wait(contr->done);
-	print_ac(buff, action);
-	if (action != DIE)
-		sem_post(contr->done);
+
+	if ((phil->alive == 1 && contr->end == 0))
+	{
+		print_ac(buff, action);
+	}
+	if (action == DIE)
+		exit(2);	
+	sem_post(contr->done);
+	// sem_post(phil->alive_l);
+		
+	// }
 }
 
 int		ft_atoi(const char *in)
