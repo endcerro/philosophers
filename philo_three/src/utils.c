@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edal <edal@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:36:43 by edal              #+#    #+#             */
-/*   Updated: 2021/02/16 20:15:04 by edal             ###   ########.fr       */
+/*   Updated: 2021/02/18 15:01:04 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,15 +75,15 @@ void	print_ts(t_philo *phil, int action)
 	ft_strlcat(buff, phil->id_str);
 	
 	// sem_wait(phil->alive_l);
-	sem_wait(contr->done);
+	// sem_wait(contr->done);
 
 	if ((phil->alive == 1 && contr->end == 0))
 	{
 		print_ac(buff, action);
 	}
 	if (action == DIE)
-		exit(2);	
-	sem_post(contr->done);
+		exit(2);
+	// sem_post(contr->done);
 	// sem_post(phil->alive_l);
 		
 	// }

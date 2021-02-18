@@ -11,7 +11,7 @@ SRC 		= 	routine.c \
 				utils.c
 
 
-CFLAGS		=	-pthread -g3 -fsanitize=address -Wall -Wextra -Werror 
+CFLAGS		=	-pthread -g3 -fsanitize=address -Wall -Wextra -Werror -march=native -pipe -O3
 CC			=	clang
 
 all : $(NAME)
