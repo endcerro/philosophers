@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:14:58 by edal              #+#    #+#             */
-/*   Updated: 2021/02/18 15:26:23 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/18 16:53:33 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,8 @@ int			loop(t_philo *phil)
 	}
 	// printf("ITS NOT\n");
 	// printf("OH SHIT I DIED\n");
-	free(phil->id_str);
-	free(contr->forks);
+	// free(phil->id_str);
+	// free(contr->forks);
 	return (ret);
 }
 
@@ -107,27 +107,38 @@ void		spawn_philos(char *buff, int i, int ret)
 			// life(&philo);
 			// exit(1);
 			pthread_create(&tmp, 0, (void*)life, (void*)&(philo));
-			exit(loop(&philo));
+			int ret = loop(&philo);
+			printf("%d %d\n", philo.id, ret );
+			// free(philo.id_str);
+			// free(contr->forks);
+			exit(ret);
 		}
 		usleep(50);
 	}
 	i = -1;
-	// waitpidhile (ret != 512 && ++i < contr->nbr_of_philo)
-	// {
+	while (ret != 512 && ++i < contr->nbr_of_philo)
+	{
 		// printf("WAITING\n");
 		waitpid(-1, &ret, WUNTRACED);
-	// }
+	}
 	// write(1, "WAIT DONE\n", 10);
 	// i = -1;
 	// printf("RET IS %d\n",ret );
 	if (ret == 512)
 		while (++i < contr->nbr_of_philo)
 		{
+			printf("killing\n");
 			// write(1, "KILLING\n", 8);
 			kill(forkid[i], SIGINT);
 		}
 	else
+	{
+		printf("why tho\n");
+		// usleep(50000000);
 		write(1, "All philos ate as supposed\n", 27);
+	}
+	printf("done\n");
+	// usleep(50000000);
 }
 
 int			main(int argc, char **argv)
@@ -145,6 +156,6 @@ int			main(int argc, char **argv)
 	if (init_contr(argv, argc))
 		return (1);
 	spawn_philos(buff, -1, -1);
-	free(contr->forks);
+	// free(contr->forks);
 	return (0);
 }

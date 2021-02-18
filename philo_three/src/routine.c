@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/10 16:59:10 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/18 15:29:20 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/18 16:36:05 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,49 @@ void	life(t_philo *phil)
 	}
 }
 
+int 	gfork(t_philo *phil, int amt)
+{
+	int val;
+	if (amt == 1)
+	{
+		if (phil->id % 2 == 0)
+		{
+			val = phil->id;
+			// printf("1 %d getting %d\n",phil->id, val );
+			return val;
+		}
+		else
+		{
+			// printf("nbr = %d \n", contr->nbr_of_philo);
+			val = (phil->id + 1) % contr->nbr_of_philo;
+			// printf("2 %d getting %d\n", phil->id, val );
+			return (val);
+		}
+	}
+	else
+	{
+		if (phil->id % 2 == 0)
+		{
+			val = (phil->id + 1) % contr->nbr_of_philo;
+			// printf("3 %d getting %d\n",phil->id, val );
+			return val;
+		}
+		else
+		{
+			val = phil->id;
+			// printf("4 %d getting %d\n",phil->id, val );
+			return (val);
+		}	
+	}
+}
+
 int		eat(t_philo *phil)
 {
-	printf("%d w %d\n",phil->id, phil->id );
-	sem_wait(contr->forks[phil->id]);
+	// printf("%d w %d\n",phil->id, phil->id );
+	sem_wait(contr->forks[gfork(phil, 1)]);
 	print_ts(phil, FORK);
-	printf("%d w %d\n", phil->id, (phil->id + 1) %
-		contr->nbr_of_philo );
-	sem_wait((contr->forks[(phil->id + 1) %
-		contr->nbr_of_philo]));
+	// printf("%d w %d\n", phil->id, gfork(phil, 1) );
+	sem_wait((contr->forks[gfork(phil, 2)]));
 	print_ts(phil, FORK);
 	sem_wait((phil->alive_l));
 	print_ts(phil, EAT);
