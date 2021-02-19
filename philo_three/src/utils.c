@@ -6,11 +6,19 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:36:43 by edal              #+#    #+#             */
-/*   Updated: 2021/02/18 16:44:15 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/19 17:05:58 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_three.h"
+
+char	*modbuf(char *buff, int i)
+{
+	buff[0] = 'A';
+	buff[2] = 0;
+	buff[1] = '0' + i;
+	return (buff);
+}
 
 int		init_contr(char **argv, int argc)
 {
@@ -30,14 +38,6 @@ int		init_contr(char **argv, int argc)
 	contr->done = sem_open("END", O_CREAT, 0644, 1);
 	if (argc == 6)
 		contr->must_eat = ft_atoi(argv[5]);
-	if (!(contr->forks = malloc(sizeof(sem_t *) * contr->nbr_of_philo)))
-		return (1);
-	while (i < contr->nbr_of_philo)
-	{
-		buff[1] = i + '0';
-		sem_unlink(buff);
-		contr->forks[i++] = sem_open(buff, O_CREAT, 0644, 1);
-	}
 	return (0);
 }
 
@@ -73,20 +73,10 @@ void	print_ts(t_philo *phil, int action)
 	free(tmp);
 	ft_strlcat(buff, "ms ");
 	ft_strlcat(buff, phil->id_str);
-	
-	// sem_wait(phil->alive_l);
-	// sem_wait(contr->done);
-
 	if ((phil->alive == 1 && contr->end == 0))
-	{
 		print_ac(buff, action);
-	}
 	if (action == DIE)
 		exit(2);
-	// sem_post(contr->done);
-	// sem_post(phil->alive_l);
-		
-	// }
 }
 
 int		ft_atoi(const char *in)

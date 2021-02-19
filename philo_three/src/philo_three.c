@@ -6,21 +6,11 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:14:58 by edal              #+#    #+#             */
-/*   Updated: 2021/02/19 15:46:17 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/19 17:05:28 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_three.h"
-
-int 		isthisreallife(t_philo *phil)
-{
-	int t;
-	
-	sem_wait(phil->alive_l);
-	t = phil->alive;
-	sem_post(phil->alive_l);
-		return (t);
-}
 
 int			loop(t_philo *phil)
 {
@@ -43,7 +33,7 @@ int			loop(t_philo *phil)
 			phil->alive = 0;
 			sem_post(phil->alive_l);
 			ret = 0;
-			break;
+			break ;
 		}
 		print_ts(phil, SLEEP);
 		usleep(contr->time_to_sleep * 1000);
@@ -51,18 +41,10 @@ int			loop(t_philo *phil)
 	return (ret);
 }
 
-char		*modbuf(char *buff, int i)
-{
-	buff[0] = 'A';
-	buff[2] = 0;
-	buff[1] = '0' + i;
-	return (buff);
-}
-
 t_philo		gphil(int i, char *buff)
 {
 	t_philo philo;
-	char 	*tmp;
+	char	*tmp;
 
 	philo.id = i;
 	philo.alive = 1;
@@ -71,8 +53,22 @@ t_philo		gphil(int i, char *buff)
 	tmp = ft_itoa(philo.id + 1);
 	philo.id_str[0] = 0;
 	ft_strlcat(philo.id_str, tmp);
-	free(tmp); 
+	free(tmp);
 	return (philo);
+}
+
+void		prep(char *buff)
+{
+	int i;
+
+	i = -1;
+	while (++i < contr->nbr_of_philo)
+	{
+		buff[1] = i + '0';
+		sem_unlink(buff);
+		contr->forks[i++] = sem_open(buff, O_CREAT, 0644, 1);
+	}
+	gettimeofday(&(contr->start), 0);
 }
 
 void		spawn_philos(char *buff, int i, int ret)
@@ -83,14 +79,7 @@ void		spawn_philos(char *buff, int i, int ret)
 	sem_t		*sems[contr->nbr_of_philo + 1];
 
 	contr->forks = (sem_t **)&sems;
-	while (++i < contr->nbr_of_philo)
-	{
-		buff[1] = i + '0';
-		sem_unlink(buff);
-		sems[i++] = sem_open(buff, O_CREAT, 0644, 1);
-	}
-	i = -1;
-	gettimeofday(&(contr->start), 0);
+	prep(buff);
 	while (++i < contr->nbr_of_philo)
 	{
 		forkid[i] = fork();
