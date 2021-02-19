@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:14:58 by edal              #+#    #+#             */
-/*   Updated: 2021/02/18 16:53:33 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/19 15:46:17 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,12 @@
 
 int 		isthisreallife(t_philo *phil)
 {
-	// printf("g2 check%d\n",phil->id );
 	int t;
 	
 	sem_wait(phil->alive_l);
 	t = phil->alive;
 	sem_post(phil->alive_l);
-	// if (t == 0)
-	// printf("ret from check %d\n",phil->id );
-		return t;
-	// // sem_wait(contr->done);
-	// t = contr->end;
-	// // sem_post(contr->done);
-	// if (t == 1)
-	// 	return 0;
-	// return 1;
+		return (t);
 }
 
 int			loop(t_philo *phil)
@@ -38,14 +29,12 @@ int			loop(t_philo *phil)
 
 	phil->alive = 1;
 	cpt = 0;
-	
 	sem_wait(phil->alive_l);
 	gettimeofday(&(phil->lmeal), 0);
 	sem_post(phil->alive_l);
 	ret = 2;
 	while (isthisreallife(phil))
 	{
-		// printf("start llop %d\n", phil->id);
 		print_ts(phil, THINK);
 		eat(phil);
 		if (++cpt == contr->must_eat)
@@ -57,14 +46,8 @@ int			loop(t_philo *phil)
 			break;
 		}
 		print_ts(phil, SLEEP);
-		// printf("goto sleep %d\n", phil->id);
 		usleep(contr->time_to_sleep * 1000);
-		// printf("done sleep %d\n", phil->id);
 	}
-	// printf("ITS NOT\n");
-	// printf("OH SHIT I DIED\n");
-	// free(phil->id_str);
-	// free(contr->forks);
 	return (ret);
 }
 
@@ -79,14 +62,16 @@ char		*modbuf(char *buff, int i)
 t_philo		gphil(int i, char *buff)
 {
 	t_philo philo;
+	char 	*tmp;
 
 	philo.id = i;
 	philo.alive = 1;
 	sem_unlink(modbuf(buff, i));
-	// sem_close(buff);
 	philo.alive_l = sem_open(modbuf(buff, i), O_CREAT, 0644, 1);
-	philo.id_str = ft_itoa(philo.id + 1);
-	// gettimeofday(&(philo.lmeal), 0);
+	tmp = ft_itoa(philo.id + 1);
+	philo.id_str[0] = 0;
+	ft_strlcat(philo.id_str, tmp);
+	free(tmp); 
 	return (philo);
 }
 
@@ -95,7 +80,16 @@ void		spawn_philos(char *buff, int i, int ret)
 	t_philo		philo;
 	pid_t		forkid[contr->nbr_of_philo];
 	pthread_t	tmp;
+	sem_t		*sems[contr->nbr_of_philo + 1];
 
+	contr->forks = (sem_t **)&sems;
+	while (++i < contr->nbr_of_philo)
+	{
+		buff[1] = i + '0';
+		sem_unlink(buff);
+		sems[i++] = sem_open(buff, O_CREAT, 0644, 1);
+	}
+	i = -1;
 	gettimeofday(&(contr->start), 0);
 	while (++i < contr->nbr_of_philo)
 	{
@@ -103,42 +97,18 @@ void		spawn_philos(char *buff, int i, int ret)
 		if (forkid[i] == 0)
 		{
 			philo = gphil(i, buff);
-			// pthread_create(&tmp, 0, (void*)loop, (void*)&(philo));
-			// life(&philo);
-			// exit(1);
 			pthread_create(&tmp, 0, (void*)life, (void*)&(philo));
-			int ret = loop(&philo);
-			printf("%d %d\n", philo.id, ret );
-			// free(philo.id_str);
-			// free(contr->forks);
-			exit(ret);
+			exit(loop(&philo));
 		}
-		usleep(50);
 	}
 	i = -1;
 	while (ret != 512 && ++i < contr->nbr_of_philo)
-	{
-		// printf("WAITING\n");
 		waitpid(-1, &ret, WUNTRACED);
-	}
-	// write(1, "WAIT DONE\n", 10);
-	// i = -1;
-	// printf("RET IS %d\n",ret );
 	if (ret == 512)
 		while (++i < contr->nbr_of_philo)
-		{
-			printf("killing\n");
-			// write(1, "KILLING\n", 8);
 			kill(forkid[i], SIGINT);
-		}
 	else
-	{
-		printf("why tho\n");
-		// usleep(50000000);
 		write(1, "All philos ate as supposed\n", 27);
-	}
-	printf("done\n");
-	// usleep(50000000);
 }
 
 int			main(int argc, char **argv)
@@ -156,6 +126,5 @@ int			main(int argc, char **argv)
 	if (init_contr(argv, argc))
 		return (1);
 	spawn_philos(buff, -1, -1);
-	// free(contr->forks);
 	return (0);
 }

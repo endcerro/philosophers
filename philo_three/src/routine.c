@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/10 16:59:10 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/18 16:36:05 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/19 15:46:47 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,7 @@ int 	gfork(t_philo *phil, int amt)
 	if (amt == 1)
 	{
 		if (phil->id % 2 == 0)
-		{
 			val = phil->id;
-			// printf("1 %d getting %d\n",phil->id, val );
-			return val;
-		}
 		else
 		{
 			// printf("nbr = %d \n", contr->nbr_of_philo);
@@ -59,6 +55,7 @@ int 	gfork(t_philo *phil, int amt)
 			return (val);
 		}	
 	}
+	return val;
 }
 
 int		eat(t_philo *phil)

@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 18:34:51 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/06 13:48:14 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/19 15:42:21 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ typedef	struct		s_contr
 }					t_contr;
 typedef	struct		s_philo
 {
-	char			*id_str;
+	char			id_str[20];
 	int				id;
 	int				alive;
 	struct timeval	lmeal;
