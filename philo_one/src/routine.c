@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/10 16:59:10 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/19 17:09:42 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/21 11:42:03 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,10 @@ int		gfork(t_philo *phil, int amt)
 
 int		eat(t_philo *phil)
 {
-	pthread_mutex_lock(&(phil->contr->forks[gfork(phil, 1)]));
+	pthread_mutex_lock(&(phil->contr->forks[phil->id]));
 	print_ts(phil, FORK);
-	pthread_mutex_lock(&(phil->contr->forks[gfork(phil, 2)]));
+	pthread_mutex_lock(&(phil->contr->forks[(phil->id + 1) %
+		phil->contr->nbr_of_philo]));
 	print_ts(phil, FORK);
 	pthread_mutex_lock(&(phil->alive_l));
 	print_ts(phil, EAT);

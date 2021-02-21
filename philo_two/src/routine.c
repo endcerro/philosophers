@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/10 16:59:10 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/19 17:09:28 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/21 11:42:27 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,19 +22,12 @@ void	life(t_philo *phil)
 	}
 }
 
-int		gfork(t_philo *phil, int amt)
-{
-	if ((amt == 1 && phil->id % 2 == 0) || (amt == 2 && phil->id % 2 != 0))
-		return (phil->id);
-	else
-		return ((phil->id + 1) % contr->nbr_of_philo);
-}
-
 int		eat(t_philo *phil)
 {
-	sem_wait(phil->contr->forks[gfork(phil, 1)]);
+	sem_wait(phil->contr->forks[phil->id]);
 	print_ts(phil, FORK);
-	sem_wait((phil->contr->forks[gfork(phil, 2)]));
+	sem_wait((phil->contr->forks[(phil->id + 1) %
+		phil->contr->nbr_of_philo]));
 	print_ts(phil, FORK);
 	sem_wait((phil->alive_l));
 	print_ts(phil, EAT);

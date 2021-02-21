@@ -1,11 +1,23 @@
-PHILO_ONE : 
-	4 410 200 200 -> ALIVE
-	4 310 200 100 -> DIE
+PHILO_ONE :
+	5 800 200 100 	// No death OK
+	5 800 200 100 7 // No death OK 
+	4 410 200 100	// No death OK 
+	4 310 200 100 	// Death   	OK
 
 PHILO_TWO :
-	4 410 200 200 -> ALIVE
-	4 310 200 100 -> DIE	
+	5 800 200 100 	// No death OK
+	5 800 200 100 7 // No death OK 
+	4 410 200 100	// No death OK
+	4 310 200 100 	// Death OK
+
 
 PHILO_THREE :
-	4 410 200 200 -> //////// DIE 
-	4 310 200 100 -> DIE
+	5 800 200 100 	// No death OK 
+	5 800 200 100 7 // No death OK
+	4 410 200 100	// No death OK 
+	4 310 200 100 	// Death OK
+
+
+
+
+
