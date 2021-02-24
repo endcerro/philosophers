@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_three.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
+/*   By: edal <edal@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:14:58 by edal              #+#    #+#             */
-/*   Updated: 2021/02/19 17:05:28 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/24 19:15:29 by edal             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,11 +62,13 @@ void		prep(char *buff)
 	int i;
 
 	i = -1;
+	buff[0] = 'f';
+	buff[2] = 0;
 	while (++i < contr->nbr_of_philo)
 	{
 		buff[1] = i + '0';
 		sem_unlink(buff);
-		contr->forks[i++] = sem_open(buff, O_CREAT, 0644, 1);
+		contr->forks[i] = sem_open(buff, O_CREAT, 0644, 1);
 	}
 	gettimeofday(&(contr->start), 0);
 }
@@ -88,6 +90,7 @@ void		spawn_philos(char *buff, int i, int ret)
 			philo = gphil(i, buff);
 			pthread_create(&tmp, 0, (void*)life, (void*)&(philo));
 			exit(loop(&philo));
+			// exit(0);
 		}
 	}
 	i = -1;
@@ -103,7 +106,7 @@ void		spawn_philos(char *buff, int i, int ret)
 int			main(int argc, char **argv)
 {
 	t_contr contrn;
-	char	buff[5];
+	char	buff[10];
 
 	if (argc < 5 || argc > 6)
 	{
@@ -112,6 +115,7 @@ int			main(int argc, char **argv)
 		return (0);
 	}
 	contr = &contrn;
+	buff[0] = 0;
 	if (init_contr(argv, argc))
 		return (1);
 	spawn_philos(buff, -1, -1);

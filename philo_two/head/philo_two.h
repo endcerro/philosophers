@@ -16,6 +16,7 @@
 # include <stdio.h>
 # include <string.h>
 # include <sys/time.h>
+# include <fcntl.h>
 # include <semaphore.h>
 # include <pthread.h>
 # include <stdlib.h>

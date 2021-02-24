@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
+/*   By: edal <edal@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/10 16:59:10 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/21 11:42:14 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/24 19:16:11 by edal             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,8 @@ int		eat(t_philo *phil)
 	print_ts(phil, EAT);
 	gettimeofday(&(phil->lmeal), 0);
 	usleep(contr->time_to_eat * 1000);
-	sem_post((contr->forks[phil->id]));
-	sem_post((contr->forks[(phil->id + 1) %
-		contr->nbr_of_philo]));
+	sem_post((contr->forks[gfork(phil, 1)]));
+	sem_post((contr->forks[gfork(phil, 2)]));
 	sem_post((phil->alive_l));
 	return (0);
 }
