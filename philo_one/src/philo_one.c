@@ -6,7 +6,7 @@
 /*   By: edal <edal@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:14:58 by edal              #+#    #+#             */
-/*   Updated: 2021/02/25 18:20:22 by edal             ###   ########.fr       */
+/*   Updated: 2021/02/25 18:26:01 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void	spawn_philos(void)
 		gettimeofday(&(philos[i].lmeal), 0);
 		pthread_create(&(pid[i]), 0, (void*)loop, (void*)&(philos[i]));
 		pthread_create(&(pid_l[i]), 0, (void*)life, (void*)&(philos[i]));
-		usleep(50);
+//		usleep(50);
 	}
 	i = -1;
 	while (++i < contr->nbr_of_philo)
