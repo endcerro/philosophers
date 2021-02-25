@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:14:58 by edal              #+#    #+#             */
-/*   Updated: 2021/02/25 15:32:08 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/25 15:35:12 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ void	spawn_philos(t_contr *contr)
 		philos[i].contr = contr;
 		philos[i].id = i;	
 		char *tmp = ft_itoa(i + 1);
+		philos[i].idstr[0] = 0;
 		ft_strlcat(philos[i].idstr, tmp);
 		free(tmp);
 		sem_unlink(modbuf(buff, i));
