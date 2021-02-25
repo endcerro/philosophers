@@ -6,7 +6,7 @@
 /*   By: edal <edal@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 18:34:51 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/25 22:33:21 by edal             ###   ########.fr       */
+/*   Updated: 2021/02/25 23:22:17 by edal             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ typedef	struct		s_contr
 	int				did_eat;
 	char			end;
 	pthread_mutex_t *forks;
+	pthread_mutex_t out;
 	long 			start;
 	int 			run;
 }					t_contr;
@@ -57,8 +58,9 @@ int					eat(t_philo *phil);
 int					check_alive(t_philo *phil);
 int					ft_atoi(const char *in);
 int					ft_strlen(char *str);
-char				*ft_itoa(unsigned long n);
+char				*ft_itoa(long n);
 size_t				ft_strlcat(char *dst, char *src);
 long	g_ms(void);
+int	getlen(long n);
 
 #endif

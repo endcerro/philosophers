@@ -6,7 +6,7 @@
 /*   By: edal <edal@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/10 16:59:10 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/25 22:30:11 by edal             ###   ########.fr       */
+/*   Updated: 2021/02/26 00:07:01 by edal             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,19 +18,29 @@ void	life(t_philo *phil)
 	long clock;
 
 	phil->t[0] = g_ms();
-	phil->t[1] = g_ms();
-	printf("%li %i\n",phil->t[1] - phil->t[0], contr->time_to_die );
-	// while (phil->time[1] - phil->time[0] > contr->time_to_die)
-	// {
-		// phil->time[]
-	// }	
+	// phil->t[1] = g_ms();
+	// while(1)
+
 	
-
-
-
-
-
-
+	while (phil->alive && contr->run)
+	{
+		phil->t[1] = g_ms();
+		if (phil->t[1] - phil->t[0] >= contr->time_to_die)
+		{
+			// pthread_mutex_lock(&contr->)
+			// pthread_mutex_lock(&phil->alive_l);
+			// printf("DED\n");
+			print_ts(phil, DIE);
+			contr->run = 0;
+			// pthread_mutex_unlock(&phil->alive_l);
+			break ;
+		}
+		
+		// printf("ok\n");
+	}
+	phil->alive = 0;	
+	// printf("%li %li\n",phil->t[1], phil->t[0]);
+	
 	// while (phil->alive)
 	// {
 	// 	//usleep(10);
@@ -63,22 +73,22 @@ int		eat(t_philo *phil)
 
 
 
-	 pthread_mutex_lock(&(contr->forks[gfork(phil, 1)]));
+	pthread_mutex_lock(&(contr->forks[gfork(phil, 1)]));
 	print_ts(phil, FORK);
-	 pthread_mutex_lock(&(contr->forks[gfork(phil, 2)]));
+ 	pthread_mutex_lock(&(contr->forks[gfork(phil, 2)]));
 	pthread_mutex_lock(&(phil->alive_l));
 	print_ts(phil, FORK);
 	print_ts(phil, EAT);
 	// usleep(contr->time_to_eat * 500);
 	// gettimeofday(&(phil->lmeal), 0);
 	phil->t[0] = g_ms();
-	usleep(contr->time_to_eat * 1000);
+	zzz(contr->time_to_eat * 1000);
 	// pthread_mutex_unlock(&(contr->forks[phil->id]));
 	// pthread_mutex_unlock(&(contr->forks[(phil->id + 1) %
 	// nbr]));	
 	
-	 pthread_mutex_unlock(&(contr->forks[gfork(phil, 1)]));
-	 pthread_mutex_unlock(&(contr->forks[gfork(phil, 2)]));
+	pthread_mutex_unlock(&(contr->forks[gfork(phil, 1)]));
+	pthread_mutex_unlock(&(contr->forks[gfork(phil, 2)]));
 	pthread_mutex_unlock(&(phil->alive_l));
 	return (0);
 }

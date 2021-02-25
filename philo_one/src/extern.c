@@ -6,11 +6,38 @@
 /*   By: edal <edal@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/10 17:10:15 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/25 21:58:30 by edal             ###   ########.fr       */
+/*   Updated: 2021/02/26 00:06:20 by edal             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_one.h"
+
+void	zzz(long d)
+{
+	struct timeval	tmp;
+	struct timeval	start;
+
+	gettimeofday(&start, NULL);
+	while (1)
+	{
+		usleep(50);
+		gettimeofday(&tmp, NULL);
+		if ((((long)(tmp.tv_sec - start.tv_sec)) * 1000000 +
+		((long)(tmp.tv_usec - start.tv_usec))) >= d)
+			return ;
+	}
+}
+
+void	x_memcpy(char *dst, char *src, int index)
+{
+	int i;
+
+	i = 0;
+	while (src[i])
+		dst[index + i++] = src[i];
+	dst[index + i] = 0;
+}
+
 
 int				ft_strlen(char *str)
 {
@@ -37,25 +64,23 @@ size_t			ft_strlcat(char *dst, char *src)
 	return (0);
 }
 
-unsigned long	getlen(unsigned long n)
+int	getlen(long nb)
 {
-	unsigned long		i;
+int length;
 
-	i = 1;
-	if (n < 0)
-		i++;
-	while (n > 9)
+	length = (!nb) ? 1 : 0;
+	while (nb)
 	{
-		n = n / 10;
-		i++;
+		nb /= 10;
+		length++;
 	}
-	return (i);
+	return (length);
 }
 
-unsigned long	ft_pow(unsigned long nb, unsigned long pow)
+long	ft_pow(long nb, long pow)
 {
-	unsigned long		i;
-	unsigned long		dest;
+	long		i;
+	long		dest;
 
 	dest = 1;
 	i = 0;
@@ -64,12 +89,12 @@ unsigned long	ft_pow(unsigned long nb, unsigned long pow)
 	return (dest);
 }
 
-char			*ft_itoa(unsigned long n)
+char			*ft_itoa(long n)
 {
 	char				*out;
-	unsigned long		len;
-	unsigned long		i;
-	unsigned long		indxo;
+	long		len;
+	long		i;
+	long		indxo;
 
 	indxo = 0;
 	i = 0;
@@ -84,4 +109,18 @@ char			*ft_itoa(unsigned long n)
 	}
 	out[indxo] = 0;
 	return (out);
+}
+
+void	digit(char buff[1000], long n, int pos, int len)
+{
+	if (!n)
+		buff[pos] = '0';
+	buff[pos + len + 1] = 0;
+	while (n)
+	{
+		buff[pos + len] = n % 10 + '0';
+		n /= 10;
+		len--;
+	}
+
 }

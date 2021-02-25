@@ -6,7 +6,7 @@
 /*   By: edal <edal@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:14:58 by edal              #+#    #+#             */
-/*   Updated: 2021/02/25 22:37:21 by edal             ###   ########.fr       */
+/*   Updated: 2021/02/26 00:06:50 by edal             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,14 @@
 void	loop(t_philo *phil)
 {
 	int cpt;
+	pthread_t 	pid;
 
 	cpt = 0;	
 	while (!contr->run)
 		;
+	pthread_create(&pid, 0, (void*)life, (void*)phil);
 	while (phil->alive && contr->run)
 	{
-		// printf("LOOOPE\n");
 		print_ts(phil, THINK);
 		eat(phil);
 		if (++cpt == contr->must_eat)
@@ -31,8 +32,7 @@ void	loop(t_philo *phil)
 			break ;
 		}
 		print_ts(phil, SLEEP);
-		// printf("%d\n",contr->time_to_sleep );
-		usleep(contr->time_to_sleep * 1000);
+		zzz(contr->time_to_sleep * 1000);
 	}
 	pthread_mutex_destroy(&(phil->alive_l));
 	return ;
