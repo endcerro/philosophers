@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
+/*   By: edal <edal@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:36:43 by edal              #+#    #+#             */
-/*   Updated: 2021/02/25 17:15:32 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/25 18:12:09 by edal             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ void	print_ts(t_philo *phil, int action)
 	ms = ms / 1000;
 	buff[0] = 0;
 	tmp = ft_itoa(ms);
+	// printf("MS = %ld\n",ms );
 	ft_strlcat(buff, tmp);
 	free(tmp);
 	ft_strlcat(buff, "ms ");
