@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edal <edal@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/10 16:59:10 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/26 00:25:39 by edal             ###   ########.fr       */
+/*   Updated: 2021/02/26 00:33:16 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	life(t_philo *phil)
 {
-	phil->t[0] = g_ms();	
+	phil->t[0] = g_ms();
 	while (phil->alive && contr->run)
 	{
 		phil->t[1] = g_ms();
@@ -38,22 +38,21 @@ int		gfork(t_philo *phil, int amt)
 
 int		eat(t_philo *phil)
 {
+	int id;
+	int one;
+	int two;
 
-	int id = phil->id;
-
-	int one = (!(id % 2)) ? id + 1 : id;
-	int two = (!(id % 2)) ? id : id - 1;
-
+	id = phil->id;
+	one = (!(id % 2)) ? id + 1 : id;
+	two = (!(id % 2)) ? id : id - 1;
 	pthread_mutex_lock(&(contr->forks[one]));
 	print_ts(phil, FORK);
- 	pthread_mutex_lock(&(contr->forks[two]));
-	// pthread_mutex_lock(&(phil->alive_l));
+	pthread_mutex_lock(&(contr->forks[two]));
 	print_ts(phil, FORK);
 	print_ts(phil, EAT);
 	phil->t[0] = g_ms();
 	zzz(contr->time_to_eat * 1000);
 	pthread_mutex_unlock(&(contr->forks[one]));
 	pthread_mutex_unlock(&(contr->forks[two]));
-	// pthread_mutex_unlock(&(phil->alive_l));
 	return (0);
 }

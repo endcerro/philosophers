@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   extern.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edal <edal@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/10 17:10:15 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/26 00:19:59 by edal             ###   ########.fr       */
+/*   Updated: 2021/02/26 00:33:43 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_one.h"
 
-void	zzz(long d)
+void		zzz(long d)
 {
 	struct timeval	tmp;
 	struct timeval	start;
@@ -28,7 +28,7 @@ void	zzz(long d)
 	}
 }
 
-void	x_memcpy(char *dst, char *src, int index)
+void		x_memcpy(char *dst, char *src, int index)
 {
 	int i;
 
