@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_three.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edal <edal@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:14:58 by edal              #+#    #+#             */
-/*   Updated: 2021/02/24 19:15:29 by edal             ###   ########.fr       */
+/*   Updated: 2021/02/25 16:34:14 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,19 +57,20 @@ t_philo		gphil(int i, char *buff)
 	return (philo);
 }
 
-void		prep(char *buff)
+void		prep()
 {
-	int i;
+	// int i;
 
-	i = -1;
-	buff[0] = 'f';
-	buff[2] = 0;
-	while (++i < contr->nbr_of_philo)
-	{
-		buff[1] = i + '0';
-		sem_unlink(buff);
-		contr->forks[i] = sem_open(buff, O_CREAT, 0644, 1);
-	}
+	// i = -1;
+	// buff[0] = 'f';
+	// buff[2] = 0;
+	// while (++i < contr->nbr_of_philo)
+	// {
+	// 	buff[1] = i + '0';
+	// 	sem_unlink(buff);
+	sem_unlink("FORKS");
+	contr->forks = sem_open("FORKS", O_CREAT, 0644, contr->nbr_of_philo);
+	// }
 	gettimeofday(&(contr->start), 0);
 }
 
@@ -78,10 +79,10 @@ void		spawn_philos(char *buff, int i, int ret)
 	t_philo		philo;
 	pid_t		forkid[contr->nbr_of_philo];
 	pthread_t	tmp;
-	sem_t		*sems[contr->nbr_of_philo + 1];
+	// sem_t		*sems[contr->nbr_of_philo + 1];
 
-	contr->forks = (sem_t **)&sems;
-	prep(buff);
+	// contr->forks = (sem_t **)&sems;
+	prep();
 	while (++i < contr->nbr_of_philo)
 	{
 		forkid[i] = fork();
@@ -92,6 +93,7 @@ void		spawn_philos(char *buff, int i, int ret)
 			exit(loop(&philo));
 			// exit(0);
 		}
+		// usleep(50);
 	}
 	i = -1;
 	while (ret != 512 && ++i < contr->nbr_of_philo)
@@ -119,5 +121,6 @@ int			main(int argc, char **argv)
 	if (init_contr(argv, argc))
 		return (1);
 	spawn_philos(buff, -1, -1);
+	sem_close(contr->forks);
 	return (0);
 }

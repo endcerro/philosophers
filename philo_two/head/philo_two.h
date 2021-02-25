@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 18:34:51 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/25 15:30:51 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/25 16:10:16 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ typedef	struct		s_contr
 	int				must_eat;
 	int				did_eat;
 	char			end;
-	sem_t			**forks;
+	sem_t			*forks;
 	struct timeval	start;
 }					t_contr;
 typedef	struct		s_philo

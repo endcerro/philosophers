@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edal <edal@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/10 16:59:10 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/24 19:16:11 by edal             ###   ########.fr       */
+/*   Updated: 2021/02/25 16:33:21 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,34 +27,41 @@ void	life(t_philo *phil)
 	sem_wait(phil->alive_l);
 	gettimeofday(&(phil->lmeal), 0);
 	sem_post(phil->alive_l);
-	while (phil->alive)
+	// int alive = 1;
+	while (1)
 	{
+		usleep(10);
 		if (!check_alive(phil))
+		{
 			print_ts(phil, DIE);
+			return ;
+		}
 	}
 }
 
-int		gfork(t_philo *phil, int amt)
-{
-	if ((amt == 1 && phil->id % 2 == 0) || (amt == 2 && phil->id % 2 != 0))
-		return (phil->id);
-	else
-		return ((phil->id + 1) % contr->nbr_of_philo);
-}
+// int		gfork(t_philo *phil, int amt)
+// {
+// 	if ((amt == 1 && phil->id % 2 == 0) || (amt == 2 && phil->id % 2 != 0))
+// 		return (phil->id);
+// 	else
+// 		return ((phil->id + 1) % contr->nbr_of_philo);
+// }
 
 int		eat(t_philo *phil)
 {
-	sem_wait(contr->forks[gfork(phil, 1)]);
+	sem_wait(contr->forks);
 	print_ts(phil, FORK);
-	sem_wait((contr->forks[gfork(phil, 2)]));
+	sem_wait(contr->forks);
 	print_ts(phil, FORK);
 	sem_wait((phil->alive_l));
 	print_ts(phil, EAT);
 	gettimeofday(&(phil->lmeal), 0);
 	usleep(contr->time_to_eat * 1000);
-	sem_post((contr->forks[gfork(phil, 1)]));
-	sem_post((contr->forks[gfork(phil, 2)]));
-	sem_post((phil->alive_l));
+	
+	sem_post(contr->forks);
+	sem_post(contr->forks);
+	sem_post(phil->alive_l);
+
 	return (0);
 }
 
@@ -72,12 +79,8 @@ int		check_alive(t_philo *phil)
 	if (t1 < t2)
 	{
 		print_ts(phil, DIE);
-		sem_wait(phil->alive_l);
 		phil->alive = 0;
-		sem_post(phil->alive_l);
-		sem_post((phil->alive_l));
-		return (0);
 	}
-	sem_post((phil->alive_l));
+	sem_post(phil->alive_l);
 	return (phil->alive);
 }

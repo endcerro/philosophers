@@ -1,21 +1,21 @@
 PHILO_ONE :
-L	5 800 200 200 	// OK LNX | MAC ?? | VM ?? || GUAC ??
-L	5 800 200 200 7 // OK LNX | MAC ?? | VM ?? || GUAC ??
-L	4 410 200 200	// OK LNX | MAC ?? | VM ?? || GUAC ?? 
-D	4 310 200 100 	// OK LNX | MAC ?? | VM ?? || GUAC ??
+L	5 800 200 200 	// OK LNX | MAC OK | VM ?? || GUAC OK
+L	5 800 200 200 7 // OK LNX | MAC OK | VM ?? || GUAC OK
+L	4 410 200 200	// OK LNX | MAC OK | VM ?? || GUAC KO 
+D	4 310 200 100 	// OK LNX | MAC OK | VM ?? || GUAC ??
 
 PHILO_TWO :
-L	5 800 200 200 	// No death OK
-L	5 800 200 200 7 // No death OK 
-L	4 410 200 200	// No death OK
-D	4 310 200 100 	// Death OK
+L	5 800 200 200 	// GUAC OK
+L	5 800 200 200 7 // GUAC OK
+L	4 410 200 200	// MAC OK
+D	4 310 200 100 	// MAC OK
 
 
 PHILO_THREE :
-L	5 800 200 200 	// No death OK 
-L	5 800 200 200 7 // No death OK
-L	4 410 200 200	// No death OK 
-D	4 310 200 100 	// Death OK
+L	5 800 200 200 	// MAC OK 
+L	5 800 200 200 7 // MAC OK
+L	4 410 200 200	// MAC OK 
+D	4 310 200 100 	// MAC OK
 
 
 
