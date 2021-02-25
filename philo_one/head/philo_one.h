@@ -6,7 +6,7 @@
 /*   By: edal <edal@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 18:34:51 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/25 23:22:17 by edal             ###   ########.fr       */
+/*   Updated: 2021/02/26 00:20:14 by edal             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,5 +62,7 @@ char				*ft_itoa(long n);
 size_t				ft_strlcat(char *dst, char *src);
 long	g_ms(void);
 int	getlen(long n);
-
+void	x_memcpy(char *dst, char *src, int index);
+void	zzz(long d);
+void	digit(char buff[1000], long n, int pos, int len);
 #endif

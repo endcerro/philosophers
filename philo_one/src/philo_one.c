@@ -6,7 +6,7 @@
 /*   By: edal <edal@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:14:58 by edal              #+#    #+#             */
-/*   Updated: 2021/02/26 00:06:50 by edal             ###   ########.fr       */
+/*   Updated: 2021/02/26 00:19:32 by edal             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ void	spawn_philos(void)
 	i = -1;
 	while (++i < contr->nbr_of_philo)
 		pthread_create(&(pid[i]), 0, (void*)loop, (void*)&(philos[i]));
-	
 	contr->start = g_ms();
 	contr->run = 1;
 	i = -1;
@@ -86,6 +85,7 @@ void	cleanup(void)
 	i = 0;
 	while (i < contr->nbr_of_philo)
 		pthread_mutex_destroy(&(contr->forks[i++]));
+	pthread_mutex_destroy(&contr->out);
 	free(contr->forks);
 }
 

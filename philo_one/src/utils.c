@@ -6,7 +6,7 @@
 /*   By: edal <edal@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:36:43 by edal              #+#    #+#             */
-/*   Updated: 2021/02/26 00:05:07 by edal             ###   ########.fr       */
+/*   Updated: 2021/02/26 00:16:40 by edal             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,9 @@ void	print_ac(char *buff, int action, int len)
 		x_memcpy(buff, " is thinking\n", len);
 	else if (action == DIE)
 		x_memcpy(buff, " died\n",len);
-	if (!contr->run)
-		return;
 	pthread_mutex_lock(&contr->out);
-	write(1, buff, ft_strlen(buff));
+	if (contr->run)
+		write(1, buff, ft_strlen(buff));	
 	pthread_mutex_unlock(&contr->out);
 
 }

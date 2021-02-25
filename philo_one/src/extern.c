@@ -6,7 +6,7 @@
 /*   By: edal <edal@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/10 17:10:15 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/26 00:06:20 by edal             ###   ########.fr       */
+/*   Updated: 2021/02/26 00:19:59 by edal             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@ void	x_memcpy(char *dst, char *src, int index)
 {
 	int i;
 
-	i = 0;
-	while (src[i])
-		dst[index + i++] = src[i];
+	i = -1;
+	while (src[++i])
+		dst[index + i] = src[i];
 	dst[index + i] = 0;
 }
 
