@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/10 16:59:10 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/25 15:32:55 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/25 15:36:59 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	life(t_philo *phil)
 {
 	while (phil->alive)
 	{
-		usleep(10);
+		// usleep(10);
 		if (!check_alive(phil))
 			print_ts(phil, DIE);
 	}
