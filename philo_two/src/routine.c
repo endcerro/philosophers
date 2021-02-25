@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/10 16:59:10 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/25 15:36:59 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/25 15:41:30 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,21 +22,29 @@ void	life(t_philo *phil)
 	}
 }
 
+int		gfork(t_philo *phil, int amt)
+{
+	if ((amt == 1 && phil->id % 2 == 0) || (amt == 2 && phil->id % 2 != 0))
+		return (phil->id);
+	else
+		return ((phil->id + 1) % contr->nbr_of_philo);
+}
+
 int		eat(t_philo *phil)
 {
-	sem_wait(phil->contr->forks[phil->id]);
+	sem_wait(phil->contr->forks[gfork(phil, 1)]);
 	print_ts(phil, FORK);
-	sem_wait((phil->contr->forks[(phil->id + 1) %
-		phil->contr->nbr_of_philo]));
+	sem_wait((phil->contr->forks[gfork(phil, 2)]));
 	print_ts(phil, FORK);
 	sem_wait((phil->alive_l));
 	print_ts(phil, EAT);
 	gettimeofday(&(phil->lmeal), 0);
 	usleep(phil->contr->time_to_eat * 1000);
+
+	sem_post((phil->contr->forks[gfork(phil, 1)]));
+	sem_post((phil->contr->forks[gfork(phil, 2)]));
 	sem_post((phil->alive_l));
-	sem_post((phil->contr->forks[phil->id]));
-	sem_post((phil->contr->forks[(phil->id + 1) %
-		phil->contr->nbr_of_philo]));
+	
 	return (0);
 }
 
@@ -48,9 +56,9 @@ int		check_alive(t_philo *phil)
 
 	gettimeofday(&time, 0);
 	sem_wait((phil->alive_l));
-	t1 = phil->lmeal.tv_sec * 1000000;
-	t1 += phil->lmeal.tv_usec + phil->contr->time_to_die * 1000;
-	t2 = time.tv_sec * 1000000 + time.tv_usec;
+	t1 = phil->lmeal.tv_sec * 1000;
+	t1 += phil->lmeal.tv_usec / 1000+ phil->contr->time_to_die;
+	t2 = time.tv_sec * 1000 + time.tv_usec / 1000;
 	if (t1 < t2)
 	{
 		print_ts(phil, DIE);
