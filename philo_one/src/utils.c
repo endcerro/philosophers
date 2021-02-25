@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:36:43 by edal              #+#    #+#             */
-/*   Updated: 2021/02/25 15:03:05 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/25 15:16:50 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,20 +56,15 @@ void	print_ts(t_philo *phil, int action)
 	char			*tmp;
 
 	gettimeofday(&delta, 0);
-	ms = delta.tv_sec * 1000000;
-	ms += delta.tv_usec;
+	ms = delta.tv_sec * 1000000 + delta.tv_usec;
 	ms -= phil->contr->start.tv_sec * 1000000 + phil->contr->start.tv_usec;
 	ms = ms / 1000;
 	buff[0] = 0;
 	tmp = ft_itoa(ms);
-	
-	// free(tmp);
 	ft_strlcat(buff, tmp);
-	ft_strlcat(buff, "ms ");
-	// tmp = ft_itoa((unsigned long)phil->id + 1);
-	
-	ft_strlcat(buff, phil->idstr);
 	free(tmp);
+	ft_strlcat(buff, "ms ");
+	ft_strlcat(buff, phil->idstr);
 	if (phil->alive == 0 || phil->contr->end)
 		return ;
 	print_ac(buff, action);

@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:14:58 by edal              #+#    #+#             */
-/*   Updated: 2021/02/25 15:00:52 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/25 15:17:09 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,10 @@ void	loop(t_philo *phil)
 {
 	int cpt;
 
-	phil->alive = 1;
+	pthread_mutex_lock(&phil->alive_l);
 	cpt = 0;
 	gettimeofday(&(phil->lmeal), 0);
+	pthread_mutex_unlock(&phil->alive_l);
 	while (phil->alive && !contr->end)
 	{
 		print_ts(phil, THINK);
@@ -49,14 +50,18 @@ void	spawn_philos(void)
 	{
 		philos[i].contr = contr;
 		philos[i].id = i;
-		char *tmp = ft_itoa(i);
+		philos[i].alive = 1;
+		char *tmp = ft_itoa(i + 1);
 		philos[i].idstr[0] = 0;
 		ft_strlcat(philos[i].idstr, tmp);
 		free(tmp);
 		pthread_mutex_init(&(philos[i].alive_l), 0);
+	}
+	i = -1;
+	while (++i < contr->nbr_of_philo)
+	{
 		pthread_create(&(pid[i]), 0, (void*)loop, (void*)&(philos[i]));
 		pthread_create(&(pid_l[i]), 0, (void*)life, (void*)&(philos[i]));
-		usleep(50);
 	}
 	i = -1;
 	while (++i < contr->nbr_of_philo)
