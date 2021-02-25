@@ -6,11 +6,24 @@
 /*   By: edal <edal@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:36:43 by edal              #+#    #+#             */
-/*   Updated: 2021/02/25 18:12:09 by edal             ###   ########.fr       */
+/*   Updated: 2021/02/25 22:38:00 by edal             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_one.h"
+
+long	g_ms(void)
+{
+	long			ms;
+	struct timeval	t;
+
+	ms = 0;
+	while (gettimeofday(&t, 0) == -1)
+		printf("TOD_ERR\n");
+	ms = t.tv_sec * 1000;
+	ms += t.tv_usec / 1000;
+	return (ms);
+}
 
 int		init_contr(char **argv, int argc)
 {
@@ -47,18 +60,23 @@ void	print_ac(char *buff, int action)
 		ft_strlcat(buff, " died\n");
 	write(1, buff, ft_strlen(buff));
 }
-
+ 	
 void	print_ts(t_philo *phil, int action)
 {
-	struct timeval	delta;
-	unsigned long	ms;
+	
+
+	long ms = g_ms() - contr->start;
+
+
+	// struct timeval	delta;
+	// unsigned long	ms;
 	char			buff[1000];
 	char			*tmp;
 
-	gettimeofday(&delta, 0);
-	ms = delta.tv_sec * 1000000 + delta.tv_usec;
-	ms -= phil->contr->start.tv_sec * 1000000 + phil->contr->start.tv_usec;
-	ms = ms / 1000;
+	// gettimeofday(&delta, 0);
+	// ms = delta.tv_sec * 1000 + delta.tv_usec / 1000;
+	// ms -= contr->start.tv_sec * 1000 + contr->start.tv_usec / 1000;
+	// // ms = ms / 1000;
 	buff[0] = 0;
 	tmp = ft_itoa(ms);
 	// printf("MS = %ld\n",ms );
@@ -66,7 +84,7 @@ void	print_ts(t_philo *phil, int action)
 	free(tmp);
 	ft_strlcat(buff, "ms ");
 	ft_strlcat(buff, phil->idstr);
-	if (phil->alive == 0 || phil->contr->end)
+	if (phil->alive == 0 || contr->end)
 		return ;
 	print_ac(buff, action);
 }

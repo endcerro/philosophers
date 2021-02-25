@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_one.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
+/*   By: edal <edal@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 18:34:51 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/25 15:00:30 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/25 22:33:21 by edal             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,15 +36,17 @@ typedef	struct		s_contr
 	int				did_eat;
 	char			end;
 	pthread_mutex_t *forks;
-	struct timeval	start;
+	long 			start;
+	int 			run;
 }					t_contr;
+
 typedef	struct		s_philo
 {
+	long 			t[2];
 	int				id;
 	int				alive;
-	struct timeval	lmeal;
+	long 			time;
 	pthread_mutex_t	alive_l;
-	t_contr			*contr;
 	char			idstr[20];
 }					t_philo;
 struct s_contr		*contr;
@@ -57,5 +59,6 @@ int					ft_atoi(const char *in);
 int					ft_strlen(char *str);
 char				*ft_itoa(unsigned long n);
 size_t				ft_strlcat(char *dst, char *src);
+long	g_ms(void);
 
 #endif
