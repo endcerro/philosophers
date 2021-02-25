@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:36:43 by edal              #+#    #+#             */
-/*   Updated: 2021/02/03 16:57:24 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/25 15:03:05 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,15 +36,15 @@ int		init_contr(char **argv, int argc)
 void	print_ac(char *buff, int action)
 {
 	if (action == FORK)
-		ft_strlcat(buff, " has taken a fork\n", 1000);
+		ft_strlcat(buff, " has taken a fork\n");
 	else if (action == EAT)
-		ft_strlcat(buff, " is eating\n", 1000);
+		ft_strlcat(buff, " is eating\n");
 	else if (action == SLEEP)
-		ft_strlcat(buff, " is sleeping\n", 1000);
+		ft_strlcat(buff, " is sleeping\n");
 	else if (action == THINK)
-		ft_strlcat(buff, " is thinking\n", 1000);
+		ft_strlcat(buff, " is thinking\n");
 	else if (action == DIE)
-		ft_strlcat(buff, " died\n", 1000);
+		ft_strlcat(buff, " died\n");
 	write(1, buff, ft_strlen(buff));
 }
 
@@ -62,11 +62,13 @@ void	print_ts(t_philo *phil, int action)
 	ms = ms / 1000;
 	buff[0] = 0;
 	tmp = ft_itoa(ms);
-	ft_strlcat(buff, tmp, 1000);
-	free(tmp);
-	ft_strlcat(buff, "ms ", 1000);
-	tmp = ft_itoa((unsigned long)phil->id + 1);
-	ft_strlcat(buff, tmp, 1000);
+	
+	// free(tmp);
+	ft_strlcat(buff, tmp);
+	ft_strlcat(buff, "ms ");
+	// tmp = ft_itoa((unsigned long)phil->id + 1);
+	
+	ft_strlcat(buff, phil->idstr);
 	free(tmp);
 	if (phil->alive == 0 || phil->contr->end)
 		return ;
