@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/10 16:59:10 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/25 16:33:21 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/25 16:45:06 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ int		eat(t_philo *phil)
 	
 	sem_post(contr->forks);
 	sem_post(contr->forks);
+	
 	sem_post(phil->alive_l);
 
 	return (0);
