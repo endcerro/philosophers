@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/10 17:10:15 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/01/23 16:11:42 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/25 15:30:42 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,24 +22,19 @@ int				ft_strlen(char *str)
 	return (i);
 }
 
-size_t			ft_strlcat(char *dst, char *src, size_t size)
+size_t			ft_strlcat(char *dst, char *src)
 {
 	int i;
 	int posdst;
 
 	posdst = 0;
-	while (dst[posdst] && posdst < (int)size)
+	while (dst[posdst])
 		posdst++;
-	if ((int)size == posdst)
-		return (size + ft_strlen(src));
-	i = 0;
-	while (i + posdst + 1 < (int)size && src[i] != '\0')
-	{
+	i = -1;
+	while (src[++i])
 		dst[posdst + i] = src[i];
-		i++;
-	}
 	dst[posdst + i] = 0;
-	return (posdst + ft_strlen(src));
+	return (0);
 }
 
 unsigned long	getlen(unsigned long n)

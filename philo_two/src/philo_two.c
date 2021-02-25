@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:14:58 by edal              #+#    #+#             */
-/*   Updated: 2021/01/23 16:12:17 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/25 15:32:08 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,13 +57,22 @@ void	spawn_philos(t_contr *contr)
 	while (++i < contr->nbr_of_philo)
 	{
 		philos[i].contr = contr;
-		philos[i].id = i;
-		gettimeofday(&(philos[i].lmeal), 0);
+		philos[i].id = i;	
+		char *tmp = ft_itoa(i + 1);
+		ft_strlcat(philos[i].idstr, tmp);
+		free(tmp);
 		sem_unlink(modbuf(buff, i));
 		philos[i].alive_l = sem_open(modbuf(buff, i), O_CREAT, 0644, 1);
+	}
+	i = -1;
+	while (++i < contr->nbr_of_philo)
+	{
+		// philos[i].contr = contr;
+		// philos[i].id = i;
+		gettimeofday(&(philos[i].lmeal), 0);
 		pthread_create(&(pid_tot[0][i]), 0, (void*)loop, (void*)&(philos[i]));
 		pthread_create(&(pid_tot[1][i]), 0, (void*)life, (void*)&(philos[i]));
-		usleep(50);
+		// usleep(50);
 	}
 	i = -1;
 	while (++i < contr->nbr_of_philo)

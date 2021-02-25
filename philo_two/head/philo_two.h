@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 18:34:51 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/01/23 16:11:36 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/25 15:30:51 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ typedef	struct		s_philo
 	int				id;
 	int				alive;
 	struct timeval	lmeal;
+	char 			idstr[20];
 	sem_t			*alive_l;
 	t_contr			*contr;
 }					t_philo;
@@ -58,6 +59,6 @@ int					check_alive(t_philo *phil);
 int					ft_atoi(const char *in);
 int					ft_strlen(char *str);
 char				*ft_itoa(unsigned long n);
-size_t				ft_strlcat(char *dst, char *src, size_t size);
+size_t				ft_strlcat(char *dst, char *src);
 
 #endif
