@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/10 16:59:10 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/26 16:19:02 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/26 16:34:15 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,12 @@ void	life(t_philo *phil)
 		{
 			print_ts(phil, DIE);
 			contr->run = 0;
+			phil->alive = 0;
 			break ;
 		}
 	}
-	phil->alive = 0;
+	printf("done %d\n",phil->id );
+	// phil->alive = 0;
 }
 
 int		eat(t_philo *phil)
