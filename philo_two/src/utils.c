@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:36:43 by edal              #+#    #+#             */
-/*   Updated: 2021/02/26 15:57:36 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/26 16:22:55 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ int		init_contr(char **argv, int argc)
 	contr->time_to_eat = ft_atoi(argv[3]);
 	contr->time_to_sleep = ft_atoi(argv[4]);
 	contr->must_eat = -1;
-	contr->end = 0;
 	contr->did_eat = 0;
 	if (argc == 6)
 		contr->must_eat = ft_atoi(argv[5]);

@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/10 16:59:10 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/26 15:52:12 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/26 16:19:02 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,10 @@ void	print_ac(char *buff, int action, int len)
 		x_memcpy(buff, " is thinking\n", len);
 	else if (action == DIE)
 		x_memcpy(buff, " died\n", len);
+	sem_wait(contr->out);
 	if (contr->run)
 		write(1, buff, ft_strlen(buff));
+	sem_post(contr->out);
 }
 
 void	print_ts(t_philo *phil, int action)
