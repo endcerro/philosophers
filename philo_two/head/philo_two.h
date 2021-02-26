@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 18:34:51 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/25 16:10:16 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/26 15:51:45 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,22 +36,23 @@ typedef	struct		s_contr
 	int				time_to_sleep;
 	int				must_eat;
 	int				did_eat;
-	char			end;
+	char			*end;
 	sem_t			*forks;
-	struct timeval	start;
+	sem_t			*out;
+	long			start;
+	int				run;
 }					t_contr;
 typedef	struct		s_philo
 {
 	int				id;
 	int				alive;
-	struct timeval	lmeal;
-	char 			idstr[20];
+	long			t;
+	char			idstr[20];
 	sem_t			*alive_l;
-	t_contr			*contr;
 }					t_philo;
 
 struct s_contr		*contr;
-int					init_contr(t_contr *contr, char **argv, int argc);
+int					init_contr(char **argv, int argc);
 void				print_ts(t_philo *phil, int action);
 void				life(t_philo *phil);
 int					eat(t_philo *phil);
@@ -60,5 +61,9 @@ int					ft_atoi(const char *in);
 int					ft_strlen(char *str);
 char				*ft_itoa(unsigned long n);
 size_t				ft_strlcat(char *dst, char *src);
-
+void				zzz(long d);
+void				x_memcpy(char *dst, char *src, int index);
+void				digit(char buff[1000], long n, int pos, int len);
+int					getlen(long nb);
+long				g_ms(void);
 #endif

@@ -6,40 +6,13 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/10 17:10:15 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/26 00:33:43 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/26 16:03:49 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_one.h"
 
-void		zzz(long d)
-{
-	struct timeval	tmp;
-	struct timeval	start;
-
-	gettimeofday(&start, NULL);
-	while (1)
-	{
-		usleep(50);
-		gettimeofday(&tmp, NULL);
-		if ((((long)(tmp.tv_sec - start.tv_sec)) * 1000000 +
-		((long)(tmp.tv_usec - start.tv_usec))) >= d)
-			return ;
-	}
-}
-
-void		x_memcpy(char *dst, char *src, int index)
-{
-	int i;
-
-	i = -1;
-	while (src[++i])
-		dst[index + i] = src[i];
-	dst[index + i] = 0;
-}
-
-
-int				ft_strlen(char *str)
+int		ft_strlen(char *str)
 {
 	int i;
 
@@ -49,7 +22,7 @@ int				ft_strlen(char *str)
 	return (i);
 }
 
-size_t			ft_strlcat(char *dst, char *src)
+size_t	ft_strlcat(char *dst, char *src)
 {
 	int i;
 	int posdst;
@@ -64,9 +37,9 @@ size_t			ft_strlcat(char *dst, char *src)
 	return (0);
 }
 
-int	getlen(long nb)
+int		getlen(long nb)
 {
-int length;
+	int	length;
 
 	length = (!nb) ? 1 : 0;
 	while (nb)
@@ -89,9 +62,9 @@ long	ft_pow(long nb, long pow)
 	return (dest);
 }
 
-char			*ft_itoa(long n)
+char	*ft_itoa(long n)
 {
-	char				*out;
+	char		*out;
 	long		len;
 	long		i;
 	long		indxo;
@@ -109,18 +82,4 @@ char			*ft_itoa(long n)
 	}
 	out[indxo] = 0;
 	return (out);
-}
-
-void	digit(char buff[1000], long n, int pos, int len)
-{
-	if (!n)
-		buff[pos] = '0';
-	buff[pos + len + 1] = 0;
-	while (n)
-	{
-		buff[pos + len] = n % 10 + '0';
-		n /= 10;
-		len--;
-	}
-
 }

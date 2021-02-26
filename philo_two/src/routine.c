@@ -6,65 +6,91 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/10 16:59:10 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/25 16:09:29 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/26 15:52:12 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_two.h"
 
-void	life(t_philo *phil)
+void	zzz(long d)
 {
-	while (phil->alive)
+	struct timeval	tmp;
+	struct timeval	start;
+
+	gettimeofday(&start, NULL);
+	while (1)
 	{
-		usleep(10);
-		if (!check_alive(phil))
-			print_ts(phil, DIE);
+		usleep(50);
+		gettimeofday(&tmp, NULL);
+		if ((((long)(tmp.tv_sec - start.tv_sec)) * 1000000 +
+		((long)(tmp.tv_usec - start.tv_usec))) >= d)
+			return ;
 	}
 }
 
-int		gfork(t_philo *phil, int amt)
+void	life(t_philo *phil)
 {
-	if ((amt == 1 && phil->id % 2 == 0) || (amt == 2 && phil->id % 2 != 0))
-		return (phil->id);
-	else
-		return ((phil->id + 1) % contr->nbr_of_philo);
+	long delta;
+
+	phil->t = g_ms();
+	while (phil->alive && contr->run)
+	{
+		delta = g_ms();
+		if (delta - phil->t >= contr->time_to_die)
+		{
+			print_ts(phil, DIE);
+			contr->run = 0;
+			break ;
+		}
+	}
+	phil->alive = 0;
 }
 
 int		eat(t_philo *phil)
 {
-	sem_wait(phil->contr->forks);
+	sem_wait(contr->forks);
 	print_ts(phil, FORK);
-	sem_wait((phil->contr->forks));
+	sem_wait(contr->forks);
 	print_ts(phil, FORK);
-	sem_wait((phil->alive_l));
 	print_ts(phil, EAT);
-	gettimeofday(&(phil->lmeal), 0);
-	usleep(phil->contr->time_to_eat * 1000);
-
-	sem_post((phil->contr->forks));
-	sem_post((phil->contr->forks));
-	sem_post((phil->alive_l));
-	
+	phil->t = g_ms();
+	zzz(contr->time_to_eat * 1000);
+	sem_post(contr->forks);
+	sem_post(contr->forks);
 	return (0);
 }
 
-int		check_alive(t_philo *phil)
+void	print_ac(char *buff, int action, int len)
 {
-	struct timeval	time;
-	unsigned long	t1;
-	unsigned long	t2;
+	if (action == FORK)
+		x_memcpy(buff, " has taken a fork\n", len);
+	else if (action == EAT)
+		x_memcpy(buff, " is eating\n", len);
+	else if (action == SLEEP)
+		x_memcpy(buff, " is sleeping\n", len);
+	else if (action == THINK)
+		x_memcpy(buff, " is thinking\n", len);
+	else if (action == DIE)
+		x_memcpy(buff, " died\n", len);
+	if (contr->run)
+		write(1, buff, ft_strlen(buff));
+}
 
-	gettimeofday(&time, 0);
-	sem_wait((phil->alive_l));
-	t1 = phil->lmeal.tv_sec * 1000000;
-	t1 += phil->lmeal.tv_usec + phil->contr->time_to_die * 1000;
-	t2 = time.tv_sec * 1000000 + time.tv_usec;
-	if (t1 < t2)
-	{
-		print_ts(phil, DIE);
-		phil->alive = 0;
-		phil->contr->end = 1;
-	}
-	sem_post((phil->alive_l));
-	return (phil->alive);
+void	print_ts(t_philo *phil, int action)
+{
+	long	ms;
+	char	buff[1000];
+	int		len;
+
+	if (!contr->run)
+		return ;
+	ms = g_ms() - contr->start;
+	digit(buff, ms, 0, getlen(ms) - 1);
+	len = ft_strlen(buff);
+	x_memcpy(buff, "ms\t ", len);
+	len += 4;
+	x_memcpy(buff, "ms\t ", len);
+	digit(buff, phil->id + 1, len, getlen(phil->id + 1) - 1);
+	len += getlen(phil->id + 1);
+	print_ac(buff, action, len);
 }

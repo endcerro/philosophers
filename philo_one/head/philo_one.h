@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_one.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edal <edal@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 18:34:51 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/26 00:20:14 by edal             ###   ########.fr       */
+/*   Updated: 2021/02/26 15:55:10 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,16 +37,16 @@ typedef	struct		s_contr
 	char			end;
 	pthread_mutex_t *forks;
 	pthread_mutex_t out;
-	long 			start;
-	int 			run;
+	long			start;
+	int				run;
 }					t_contr;
 
 typedef	struct		s_philo
 {
-	long 			t[2];
+	long			t;
 	int				id;
 	int				alive;
-	long 			time;
+	long			time;
 	pthread_mutex_t	alive_l;
 	char			idstr[20];
 }					t_philo;
@@ -60,9 +60,9 @@ int					ft_atoi(const char *in);
 int					ft_strlen(char *str);
 char				*ft_itoa(long n);
 size_t				ft_strlcat(char *dst, char *src);
-long	g_ms(void);
-int	getlen(long n);
-void	x_memcpy(char *dst, char *src, int index);
-void	zzz(long d);
-void	digit(char buff[1000], long n, int pos, int len);
+long				g_ms(void);
+int					getlen(long n);
+void				x_memcpy(char *dst, char *src, int index);
+void				zzz(long d);
+void				digit(char buff[1000], long n, int pos, int len);
 #endif

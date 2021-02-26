@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_one.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edal <edal@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:14:58 by edal              #+#    #+#             */
-/*   Updated: 2021/02/26 00:19:32 by edal             ###   ########.fr       */
+/*   Updated: 2021/02/26 15:56:45 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 void	loop(t_philo *phil)
 {
-	int cpt;
-	pthread_t 	pid;
+	int			cpt;
+	pthread_t	pid;
 
-	cpt = 0;	
+	cpt = 0;
 	while (!contr->run)
 		;
 	pthread_create(&pid, 0, (void*)life, (void*)phil);
@@ -38,11 +38,11 @@ void	loop(t_philo *phil)
 	return ;
 }
 
-int 	prep_philos(t_philo* philos)
+int		prep_philos(t_philo *philos)
 {
-	int 	i;
-	char 	*tmp;
-	
+	int		i;
+	char	*tmp;
+
 	i = -1;
 	while (++i < contr->nbr_of_philo)
 	{
@@ -54,7 +54,7 @@ int 	prep_philos(t_philo* philos)
 		free(tmp);
 		pthread_mutex_init(&(philos[i].alive_l), 0);
 	}
-	return 0;
+	return (0);
 }
 
 void	spawn_philos(void)
