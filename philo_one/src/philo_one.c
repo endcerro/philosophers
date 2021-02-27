@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:14:58 by edal              #+#    #+#             */
-/*   Updated: 2021/02/26 15:56:45 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/27 16:24:41 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ void	loop(t_philo *phil)
 		print_ts(phil, SLEEP);
 		zzz(contr->time_to_sleep * 1000);
 	}
-	pthread_mutex_destroy(&(phil->alive_l));
 	return ;
 }
 
@@ -73,7 +72,10 @@ void	spawn_philos(void)
 	contr->run = 1;
 	i = -1;
 	while (++i < contr->nbr_of_philo)
+	{
 		pthread_join(pid[i], 0);
+		pthread_mutex_destroy(&(philos[i].alive_l));
+	}
 	if (contr->did_eat == contr->nbr_of_philo)
 		write(1, "All philos ate as supposed\n", 27);
 }

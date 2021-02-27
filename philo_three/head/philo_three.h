@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 18:34:51 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/27 15:23:02 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/27 16:19:28 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,15 +40,16 @@ typedef	struct		s_contr
 	int				must_eat;
 	sem_t			*out;
 	sem_t			*forks;
-	long 			start;
-	int 			run;
+	long			start;
+	int				run;
 }					t_contr;
 typedef	struct		s_philo
 {
 	char			idstr[20];
 	int				id;
 	int				alive;
-	long 			t;
+	long			t;
+	sem_t			*alive_l;
 }					t_philo;
 
 struct s_contr		*contr;
@@ -69,4 +70,5 @@ void				x_memcpy(char *dst, char *src, int index);
 void				digit(char buff[1000], long n, int pos, int len);
 int					getlen(long nb);
 void				zzz(long d);
+
 #endif

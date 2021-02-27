@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/10 16:59:10 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/27 16:04:26 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/27 16:21:08 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,17 @@ int		life(t_philo *phil)
 	phil->t = g_ms();
 	while (phil->alive && contr->run)
 	{
+		sem_wait(phil->alive_l);
 		delta = g_ms();
 		if (delta - phil->t >= contr->time_to_die)
 		{
 			print_ts(phil, DIE);
 			contr->run = 0;
 			ret = 2;
+			sem_post(phil->alive_l);
 			break ;
 		}
+		sem_post(phil->alive_l);
 	}
 	phil->alive = 0;
 	return (ret);
@@ -59,8 +62,10 @@ int		eat(t_philo *phil)
 	print_ts(phil, FORK);
 	sem_wait(contr->forks);
 	print_ts(phil, FORK);
+	sem_wait(phil->alive_l);
 	print_ts(phil, EAT);
 	phil->t = g_ms();
+	sem_post(phil->alive_l);
 	zzz(contr->time_to_eat * 1000);
 	sem_post(contr->forks);
 	sem_post(contr->forks);

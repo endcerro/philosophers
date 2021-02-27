@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 18:34:51 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/27 13:32:11 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/27 16:11:42 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ typedef	struct		s_philo
 	int				alive;
 	long			t;
 	char			idstr[20];
+	sem_t			*alive_l;
 }					t_philo;
 
 struct s_contr		*contr;

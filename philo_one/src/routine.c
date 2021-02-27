@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/10 16:59:10 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/26 16:03:02 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/27 16:25:13 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void	life(t_philo *phil)
 	phil->t = g_ms();
 	while (phil->alive && contr->run)
 	{
+		pthread_mutex_lock(&(phil->alive_l));
 		delta = g_ms();
 		if (delta - phil->t >= contr->time_to_die)
 		{
@@ -26,6 +27,7 @@ void	life(t_philo *phil)
 			contr->run = 0;
 			break ;
 		}
+		pthread_mutex_unlock(&(phil->alive_l));
 	}
 	phil->alive = 0;
 }
@@ -55,8 +57,10 @@ int		eat(t_philo *phil)
 	print_ts(phil, FORK);
 	pthread_mutex_lock(&(contr->forks[two]));
 	print_ts(phil, FORK);
+	pthread_mutex_lock(&(phil->alive_l));
 	print_ts(phil, EAT);
 	phil->t = g_ms();
+	pthread_mutex_unlock(&(phil->alive_l));
 	zzz(contr->time_to_eat * 1000);
 	pthread_mutex_unlock(&(contr->forks[one]));
 	pthread_mutex_unlock(&(contr->forks[two]));

@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:14:58 by edal              #+#    #+#             */
-/*   Updated: 2021/02/27 14:36:55 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/27 16:14:02 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ int		prep_philos(t_philo *philos)
 		philos[i].idstr[0] = 0;
 		tmp = ft_itoa(i + 1);
 		ft_strlcat(philos[i].idstr, tmp);
+		sem_unlink(tmp);
+		philos[i].alive_l = sem_open(tmp, O_CREAT, 0644, 1); 
 		free(tmp);
 	}
 	return (0);
@@ -67,7 +69,10 @@ void	spawn_philos(void)
 	}
 	i = -1;
 	while (++i < contr->nbr_of_philo)
+	{
 		pthread_join(pid[i], 0);
+		sem_close(philos[i].alive_l);
+	}
 	if (contr->did_eat == contr->nbr_of_philo)
 		write(1, "All philos ate as supposed\n", 27);
 }
