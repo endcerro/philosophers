@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:14:58 by edal              #+#    #+#             */
-/*   Updated: 2021/02/26 16:35:27 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/27 14:36:55 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,8 @@
 void	loop(t_philo *phil)
 {
 	int			cpt;
-	pthread_t	pid;
 
 	cpt = 0;
-	while (!contr->run)
-		;
-	pthread_create(&pid, 0, (void*)life, (void*)phil);
 	while (phil->alive && contr->run)
 	{
 		print_ts(phil, THINK);
@@ -33,11 +29,7 @@ void	loop(t_philo *phil)
 		}
 		print_ts(phil, SLEEP);
 		zzz(contr->time_to_sleep * 1000);
-		// printf("LOOPING\n");
 	}
-	pthread_join(pid, 0);
-	printf("%d return\n",phil->id );
-	return ;
 }
 
 int		prep_philos(t_philo *philos)
@@ -65,25 +57,28 @@ void	spawn_philos(void)
 	t_philo		philos[contr->nbr_of_philo];
 
 	prep_philos(philos);
-	contr->run = 0;
-	i = -1;
-	while (++i < contr->nbr_of_philo)
-		pthread_create(&(pid[i]), 0, (void*)loop, (void*)&(philos[i]));
 	contr->start = g_ms();
 	contr->run = 1;
 	i = -1;
 	while (++i < contr->nbr_of_philo)
 	{
-		pthread_join(pid[i], 0);
-		printf("done join %d\n", i);
+		pthread_create(&(pid[i]), 0, (void*)life, (void*)&(philos[i]));
+		usleep(100);
 	}
-
+	i = -1;
+	while (++i < contr->nbr_of_philo)
+		pthread_join(pid[i], 0);
 	if (contr->did_eat == contr->nbr_of_philo)
 		write(1, "All philos ate as supposed\n", 27);
 }
 
 void	cleanup(void)
 {
+	int i;
+
+	i = -1;
+	while (++i < contr->nbr_of_philo)
+		sem_post(contr->forks);
 	sem_close(contr->out);
 	sem_close(contr->forks);
 }

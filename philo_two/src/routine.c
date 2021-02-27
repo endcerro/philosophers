@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/10 16:59:10 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/26 16:34:15 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/27 14:36:14 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,11 @@ void	zzz(long d)
 
 void	life(t_philo *phil)
 {
-	long delta;
+	long		delta;
+	pthread_t	pid;
 
+	pid = 0;
+	pthread_create(&pid, 0, (void*)loop, (void*)phil);
 	phil->t = g_ms();
 	while (phil->alive && contr->run)
 	{
@@ -40,12 +43,10 @@ void	life(t_philo *phil)
 		{
 			print_ts(phil, DIE);
 			contr->run = 0;
-			phil->alive = 0;
 			break ;
 		}
 	}
-	printf("done %d\n",phil->id );
-	// phil->alive = 0;
+	phil->alive = 0;
 }
 
 int		eat(t_philo *phil)

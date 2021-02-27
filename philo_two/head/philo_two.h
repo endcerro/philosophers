@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 18:34:51 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/26 16:22:59 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/27 13:32:11 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,4 +64,6 @@ void				x_memcpy(char *dst, char *src, int index);
 void				digit(char buff[1000], long n, int pos, int len);
 int					getlen(long nb);
 long				g_ms(void);
+void				loop(t_philo *phil);
+
 #endif
