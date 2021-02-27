@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:14:58 by edal              #+#    #+#             */
-/*   Updated: 2021/02/27 16:23:29 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/27 16:36:20 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ int		prep_philos(t_philo *philos)
 		philos[i].idstr[0] = 0;
 		tmp = ft_itoa(i + 1);
 		ft_strlcat(philos[i].idstr, tmp);
+		sem_unlink(tmp);
 		philos[i].alive_l = sem_open(tmp, O_CREAT, 0644, 1);
 		free(tmp);
 	}
@@ -63,11 +64,8 @@ void	spawn_philos(void)
 	ret = 0;
 	i = -1;
 	while (++i < contr->nbr_of_philo)
-	{
-		pid[i] = fork();
-		if (pid[i] == 0)
+		if ((pid[i] = fork()) == 0)
 			exit(life(&philos[i]));
-	}
 	i = -1;
 	while (ret != 512 && ++i < contr->nbr_of_philo)
 	{

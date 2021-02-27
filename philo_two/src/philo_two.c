@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:14:58 by edal              #+#    #+#             */
-/*   Updated: 2021/02/27 16:14:02 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/27 16:35:03 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int		prep_philos(t_philo *philos)
 		tmp = ft_itoa(i + 1);
 		ft_strlcat(philos[i].idstr, tmp);
 		sem_unlink(tmp);
-		philos[i].alive_l = sem_open(tmp, O_CREAT, 0644, 1); 
+		philos[i].alive_l = sem_open(tmp, O_CREAT, 0644, 1);
 		free(tmp);
 	}
 	return (0);
