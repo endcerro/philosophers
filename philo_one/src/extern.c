@@ -6,13 +6,13 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/10 17:10:15 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/25 15:00:12 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/26 16:03:49 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_one.h"
 
-int				ft_strlen(char *str)
+int		ft_strlen(char *str)
 {
 	int i;
 
@@ -22,7 +22,7 @@ int				ft_strlen(char *str)
 	return (i);
 }
 
-size_t			ft_strlcat(char *dst, char *src)
+size_t	ft_strlcat(char *dst, char *src)
 {
 	int i;
 	int posdst;
@@ -37,25 +37,23 @@ size_t			ft_strlcat(char *dst, char *src)
 	return (0);
 }
 
-unsigned long	getlen(unsigned long n)
+int		getlen(long nb)
 {
-	unsigned long		i;
+	int	length;
 
-	i = 1;
-	if (n < 0)
-		i++;
-	while (n > 9)
+	length = (!nb) ? 1 : 0;
+	while (nb)
 	{
-		n = n / 10;
-		i++;
+		nb /= 10;
+		length++;
 	}
-	return (i);
+	return (length);
 }
 
-unsigned long	ft_pow(unsigned long nb, unsigned long pow)
+long	ft_pow(long nb, long pow)
 {
-	unsigned long		i;
-	unsigned long		dest;
+	long		i;
+	long		dest;
 
 	dest = 1;
 	i = 0;
@@ -64,12 +62,12 @@ unsigned long	ft_pow(unsigned long nb, unsigned long pow)
 	return (dest);
 }
 
-char			*ft_itoa(unsigned long n)
+char	*ft_itoa(long n)
 {
-	char				*out;
-	unsigned long		len;
-	unsigned long		i;
-	unsigned long		indxo;
+	char		*out;
+	long		len;
+	long		i;
+	long		indxo;
 
 	indxo = 0;
 	i = 0;

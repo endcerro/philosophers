@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edal <edal@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:36:43 by edal              #+#    #+#             */
-/*   Updated: 2021/02/25 18:12:09 by edal             ###   ########.fr       */
+/*   Updated: 2021/02/26 16:03:56 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_one.h"
 
-int		init_contr(char **argv, int argc)
+int			init_contr(char **argv, int argc)
 {
-	int i;
+	int		i;
 
 	i = 0;
 	contr->nbr_of_philo = ft_atoi(argv[1]);
@@ -30,48 +30,50 @@ int		init_contr(char **argv, int argc)
 		return (1);
 	while (i < contr->nbr_of_philo)
 		pthread_mutex_init(&(contr->forks[i++]), 0);
+	pthread_mutex_init(&(contr->out), 0);
 	return (0);
 }
 
-void	print_ac(char *buff, int action)
+void		digit(char buff[1000], long n, int pos, int len)
 {
-	if (action == FORK)
-		ft_strlcat(buff, " has taken a fork\n");
-	else if (action == EAT)
-		ft_strlcat(buff, " is eating\n");
-	else if (action == SLEEP)
-		ft_strlcat(buff, " is sleeping\n");
-	else if (action == THINK)
-		ft_strlcat(buff, " is thinking\n");
-	else if (action == DIE)
-		ft_strlcat(buff, " died\n");
-	write(1, buff, ft_strlen(buff));
+	if (!n)
+		buff[pos] = '0';
+	buff[pos + len + 1] = 0;
+	while (n)
+	{
+		buff[pos + len] = n % 10 + '0';
+		n /= 10;
+		len--;
+	}
 }
 
-void	print_ts(t_philo *phil, int action)
+void		zzz(long d)
 {
-	struct timeval	delta;
-	unsigned long	ms;
-	char			buff[1000];
-	char			*tmp;
+	struct timeval	tmp;
+	struct timeval	start;
 
-	gettimeofday(&delta, 0);
-	ms = delta.tv_sec * 1000000 + delta.tv_usec;
-	ms -= phil->contr->start.tv_sec * 1000000 + phil->contr->start.tv_usec;
-	ms = ms / 1000;
-	buff[0] = 0;
-	tmp = ft_itoa(ms);
-	// printf("MS = %ld\n",ms );
-	ft_strlcat(buff, tmp);
-	free(tmp);
-	ft_strlcat(buff, "ms ");
-	ft_strlcat(buff, phil->idstr);
-	if (phil->alive == 0 || phil->contr->end)
-		return ;
-	print_ac(buff, action);
+	gettimeofday(&start, NULL);
+	while (1)
+	{
+		usleep(50);
+		gettimeofday(&tmp, NULL);
+		if ((((long)(tmp.tv_sec - start.tv_sec)) * 1000000 +
+		((long)(tmp.tv_usec - start.tv_usec))) >= d)
+			return ;
+	}
 }
 
-int		ft_atoi(const char *in)
+void		x_memcpy(char *dst, char *src, int index)
+{
+	int i;
+
+	i = -1;
+	while (src[++i])
+		dst[index + i] = src[i];
+	dst[index + i] = 0;
+}
+
+int			ft_atoi(const char *in)
 {
 	int pos;
 	int nb;

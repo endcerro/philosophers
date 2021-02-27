@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 18:34:51 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/25 16:14:49 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/27 16:19:28 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,24 +38,24 @@ typedef	struct		s_contr
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				must_eat;
-	sem_t			*done;
-	char			end;
+	sem_t			*out;
 	sem_t			*forks;
-	struct timeval	start;
+	long			start;
+	int				run;
 }					t_contr;
 typedef	struct		s_philo
 {
-	char			id_str[20];
+	char			idstr[20];
 	int				id;
 	int				alive;
-	struct timeval	lmeal;
+	long			t;
 	sem_t			*alive_l;
 }					t_philo;
 
 struct s_contr		*contr;
 int					init_contr(char **argv, int argc);
 void				print_ts(t_philo *phil, int action);
-void				life(t_philo *phil);
+int					life(t_philo *phil);
 int					eat(t_philo *phil);
 int					check_alive(t_philo *phil);
 int					ft_atoi(const char *in);
@@ -64,4 +64,11 @@ char				*ft_itoa(unsigned long n);
 size_t				ft_strlcat(char *dst, char *src);
 int					isthisreallife(t_philo *phil);
 char				*modbuf(char *buff, int i);
+void				loop(t_philo *phil);
+long				g_ms(void);
+void				x_memcpy(char *dst, char *src, int index);
+void				digit(char buff[1000], long n, int pos, int len);
+int					getlen(long nb);
+void				zzz(long d);
+
 #endif

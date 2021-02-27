@@ -6,79 +6,65 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:36:43 by edal              #+#    #+#             */
-/*   Updated: 2021/02/25 16:11:13 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/27 14:35:54 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_two.h"
 
-int		init_contr(t_contr *contr, char **argv, int argc)
+long	g_ms(void)
+{
+	long			ms;
+	struct timeval	t;
+
+	ms = 0;
+	gettimeofday(&t, 0);
+	ms = t.tv_sec * 1000;
+	ms += t.tv_usec / 1000;
+	return (ms);
+}
+
+int		init_contr(char **argv, int argc)
 {
 	int		i;
-	char	buff[20];
 
-	buff[0] = 'F';
-	buff[2] = 0;
 	i = 0;
 	contr->nbr_of_philo = ft_atoi(argv[1]);
 	contr->time_to_die = ft_atoi(argv[2]);
 	contr->time_to_eat = ft_atoi(argv[3]);
 	contr->time_to_sleep = ft_atoi(argv[4]);
 	contr->must_eat = -1;
-	contr->end = 0;
 	contr->did_eat = 0;
 	if (argc == 6)
 		contr->must_eat = ft_atoi(argv[5]);
-	// if (!(contr->forks = malloc(sizeof(sem_t *) * contr->nbr_of_philo)))
-	// 	return (1);
-	// while (i < contr->nbr_of_philo)
-	// {
-		
-	sem_unlink("FORKS");	
+	sem_unlink("FORKS");
+	sem_unlink("OUT");
 	contr->forks = sem_open("FORKS", O_CREAT, 0644, contr->nbr_of_philo);
-		// i++;
-	// }
+	contr->out = sem_open("OUT", O_CREAT, 0644, 1);
 	return (0);
 }
 
-void	print_ac(char *buff, int action)
+int		getlen(long nb)
 {
-	if (action == FORK)
-		ft_strlcat(buff, " has taken a fork\n");
-	else if (action == EAT)
-		ft_strlcat(buff, " is eating\n");
-	else if (action == SLEEP)
-		ft_strlcat(buff, " is sleeping\n");
-	else if (action == THINK)
-		ft_strlcat(buff, " is thinking\n");
-	else if (action == DIE)
-		ft_strlcat(buff, " died\n");
-	write(1, buff, ft_strlen(buff));
+	int length;
+
+	length = (!nb) ? 1 : 0;
+	while (nb)
+	{
+		nb /= 10;
+		length++;
+	}
+	return (length);
 }
 
-void	print_ts(t_philo *phil, int action)
+void	x_memcpy(char *dst, char *src, int index)
 {
-	struct timeval	delta;
-	unsigned long	ms;
-	char			buff[1000];
-	char			*tmp;
+	int i;
 
-	gettimeofday(&delta, 0);
-	ms = delta.tv_sec * 1000000;
-	ms += delta.tv_usec;
-	ms -= phil->contr->start.tv_sec * 1000000 + phil->contr->start.tv_usec;
-	ms = ms / 1000;
-	buff[0] = 0;
-	tmp = ft_itoa(ms);
-	ft_strlcat(buff, tmp);
-	free(tmp);
-	ft_strlcat(buff, "ms ");
-	// tmp = ft_itoa((unsigned long)phil->id + 1);
-	ft_strlcat(buff, phil->idstr);
-	// free(tmp);
-	if (phil->alive == 0 || phil->contr->end)
-		return ;
-	print_ac(buff, action);
+	i = -1;
+	while (src[++i])
+		dst[index + i] = src[i];
+	dst[index + i] = 0;
 }
 
 int		ft_atoi(const char *in)

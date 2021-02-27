@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/18 18:34:51 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/25 15:00:30 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/26 15:55:10 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,15 +36,18 @@ typedef	struct		s_contr
 	int				did_eat;
 	char			end;
 	pthread_mutex_t *forks;
-	struct timeval	start;
+	pthread_mutex_t out;
+	long			start;
+	int				run;
 }					t_contr;
+
 typedef	struct		s_philo
 {
+	long			t;
 	int				id;
 	int				alive;
-	struct timeval	lmeal;
+	long			time;
 	pthread_mutex_t	alive_l;
-	t_contr			*contr;
 	char			idstr[20];
 }					t_philo;
 struct s_contr		*contr;
@@ -55,7 +58,11 @@ int					eat(t_philo *phil);
 int					check_alive(t_philo *phil);
 int					ft_atoi(const char *in);
 int					ft_strlen(char *str);
-char				*ft_itoa(unsigned long n);
+char				*ft_itoa(long n);
 size_t				ft_strlcat(char *dst, char *src);
-
+long				g_ms(void);
+int					getlen(long n);
+void				x_memcpy(char *dst, char *src, int index);
+void				zzz(long d);
+void				digit(char buff[1000], long n, int pos, int len);
 #endif
