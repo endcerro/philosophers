@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/10 17:10:15 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/06 13:44:32 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/27 14:51:18 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,19 +37,17 @@ size_t			ft_strlcat(char *dst, char *src)
 	return (0);
 }
 
-unsigned long	getlen(unsigned long n)
+void			digit(char buff[1000], long n, int pos, int len)
 {
-	unsigned long		i;
-
-	i = 1;
-	if (n < 0)
-		i++;
-	while (n > 9)
+	if (!n)
+		buff[pos] = '0';
+	buff[pos + len + 1] = 0;
+	while (n)
 	{
-		n = n / 10;
-		i++;
+		buff[pos + len] = n % 10 + '0';
+		n /= 10;
+		len--;
 	}
-	return (i);
 }
 
 unsigned long	ft_pow(unsigned long nb, unsigned long pow)
