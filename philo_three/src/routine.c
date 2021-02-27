@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/10 16:59:10 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/27 15:30:44 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/27 16:04:26 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,8 @@ void	print_ac(char *buff, int action, int len)
 	if (contr->run)
 	{
 		write(1, buff, ft_strlen(buff));
-		sem_post(contr->out);
+		if (action != DIE)
+			sem_post(contr->out);
 	}
 }
 
