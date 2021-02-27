@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/10 16:59:10 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/27 16:25:13 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/27 16:27:40 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ void	life(t_philo *phil)
 		{
 			print_ts(phil, DIE);
 			contr->run = 0;
+			pthread_mutex_unlock(&(phil->alive_l));
 			break ;
 		}
 		pthread_mutex_unlock(&(phil->alive_l));
