@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:14:58 by edal              #+#    #+#             */
-/*   Updated: 2021/02/27 16:24:41 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/28 15:46:13 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,15 +95,18 @@ int		main(int argc, char **argv)
 {
 	t_contr contrn;
 
+	contr = &contrn;
 	if (argc < 5 || argc > 6)
 	{
 		write(1,
 "nbr of philo | time_to_die | time_to_eat | time_to_sleep | [must eat]\n", 70);
 		return (0);
 	}
-	contr = &contrn;
 	if (init_contr(argv, argc))
+	{
+		write(1, "Invalid launch sequence\n", 24);
 		return (1);
+	}
 	spawn_philos();
 	cleanup();
 	return (0);

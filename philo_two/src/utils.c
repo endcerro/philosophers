@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:36:43 by edal              #+#    #+#             */
-/*   Updated: 2021/02/27 14:35:54 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/28 15:54:23 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,9 @@ int		init_contr(char **argv, int argc)
 	contr->did_eat = 0;
 	if (argc == 6)
 		contr->must_eat = ft_atoi(argv[5]);
+	if ( contr->nbr_of_philo <= 0 || contr->nbr_of_philo >= 200 || contr->time_to_eat <= 0 || contr->time_to_die <= 0 ||
+		contr->time_to_sleep <= 0 || (contr->must_eat != -1 && contr->must_eat <=0))
+		return (1);
 	sem_unlink("FORKS");
 	sem_unlink("OUT");
 	contr->forks = sem_open("FORKS", O_CREAT, 0644, contr->nbr_of_philo);

@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:14:58 by edal              #+#    #+#             */
-/*   Updated: 2021/02/27 16:35:03 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/28 15:54:42 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,10 @@ int		main(int argc, char **argv)
 	}
 	contr = &contrn;
 	if (init_contr(argv, argc))
+	{
+		write(1, "Invalid launch sequence\n", 24);
 		return (1);
+	}
 	spawn_philos();
 	cleanup();
 	return (0);
