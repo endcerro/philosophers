@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/10 16:59:10 by edal--ce          #+#    #+#             */
-/*   Updated: 2021/02/27 16:31:26 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/28 16:24:15 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ int		life(t_philo *phil)
 			break ;
 		}
 		sem_post(phil->alive_l);
+		usleep(100);
 	}
 	phil->alive = 0;
 	return (ret);
