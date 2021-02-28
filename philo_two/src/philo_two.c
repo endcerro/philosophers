@@ -6,7 +6,7 @@
 /*   By: edal--ce <edal--ce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/01 18:14:58 by edal              #+#    #+#             */
-/*   Updated: 2021/02/28 17:18:26 by edal--ce         ###   ########.fr       */
+/*   Updated: 2021/02/28 17:22:33 by edal--ce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,10 @@ void	cleanup(void)
 
 	i = -1;
 	while (++i < contr->nbr_of_philo)
+	{
 		sem_post(contr->forks);
+		sem_post(contr->out);
+	}
 	sem_close(contr->out);
 	sem_close(contr->forks);
 }
