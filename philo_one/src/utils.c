@@ -26,8 +26,10 @@ int			init_contr(char **argv, int argc)
 	contr->did_eat = 0;
 	if (argc == 6)
 		contr->must_eat = ft_atoi(argv[5]);
-	if ( contr->nbr_of_philo <= 0 || contr->nbr_of_philo >= 200 || contr->time_to_eat <= 0 || contr->time_to_die <= 0 ||
-		contr->time_to_sleep <= 0 || (contr->must_eat != -1 && contr->must_eat <=0))
+	if ( contr->nbr_of_philo <= 0 || contr->nbr_of_philo >= 200 || 
+		contr->time_to_eat <= 0 || contr->time_to_die <= 0 ||
+		contr->time_to_sleep <= 0 || 
+		(contr->must_eat != -1 && contr->must_eat <= 0))
 		return (1);
 	if (!(contr->forks = malloc(sizeof(pthread_mutex_t) * contr->nbr_of_philo)))
 		return (1);
