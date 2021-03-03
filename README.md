@@ -1,6 +1,6 @@
 # Philosophers
 
-This project requieres the use of threading techniques in C and all the data management that comes along
+This project requieres the use of threading techniques in C as well as the data management that comes along plus a need to somewhat optimize your code to stay in the timings
 
 Usage : ./philo_x TIME_TO_DIE   TIME_TO_EAT  TIME_TO_SLEEP (MUST_EAT)
 
