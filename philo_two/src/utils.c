@@ -26,9 +26,6 @@ long	g_ms(void)
 
 int		init_contr(char **argv, int argc)
 {
-	int		i;
-
-	i = 0;
 	contr->nbr_of_philo = ft_atoi(argv[1]);
 	contr->time_to_die = ft_atoi(argv[2]);
 	contr->time_to_eat = ft_atoi(argv[3]);

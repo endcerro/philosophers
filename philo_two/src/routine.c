@@ -50,6 +50,7 @@ void	life(t_philo *phil)
 		sem_post(phil->alive_l);
 		usleep(100);
 	}
+	pthread_join(pid, 0);
 	phil->alive = 0;
 }
 
@@ -86,6 +87,7 @@ void	print_ac(char *buff, int action, int len)
 		write(1, buff, ft_strlen(buff));
 	if (action == DIE)
 		contr->run = 0;
+	// else
 	sem_post(contr->out);
 }
 
