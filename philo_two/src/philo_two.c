@@ -71,12 +71,6 @@ void	spawn_philos(void)
 	while (++i < contr->nbr_of_philo)
 	{
 		pthread_join(pid[i], 0);
-		// sem_close(philos[i].alive_l);
-	}
-	i = -1;
-	while (++i < contr->nbr_of_philo)
-	{
-		// pthread_join(pid[i], 0);
 		sem_close(philos[i].alive_l);
 	}
 	if (contr->did_eat == contr->nbr_of_philo)
